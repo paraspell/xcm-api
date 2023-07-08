@@ -14,8 +14,8 @@ dependencies:
     specifier: ^10.0.0
     version: 10.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)
   '@paraspell/sdk':
-    specifier: ^1.1.13
-    version: 1.1.13(@polkadot/api-base@10.9.1)(@polkadot/api@10.9.1)(@polkadot/apps-config@0.124.1)(@polkadot/types@10.9.1)
+    specifier: ^2.0.4
+    version: 2.0.4(@polkadot/api-base@10.9.1)(@polkadot/api@10.9.1)(@polkadot/apps-config@0.124.1)(@polkadot/types@10.9.1)
   '@polkadot/api':
     specifier: ^10.9.1
     version: 10.9.1
@@ -1518,8 +1518,8 @@ packages:
       '@open-web3/orml-type-definitions': 1.1.4
     dev: false
 
-  /@paraspell/sdk@1.1.13(@polkadot/api-base@10.9.1)(@polkadot/api@10.9.1)(@polkadot/apps-config@0.124.1)(@polkadot/types@10.9.1):
-    resolution: {integrity: sha512-/Bqv13nmufTATv5rUJBGRLzT2YeQhkw3G997+NKoeLCIzNAUOMKCV6dE0D1CrJtSv4B4I6YxhVZdxvuJWD1IeQ==}
+  /@paraspell/sdk@2.0.4(@polkadot/api-base@10.9.1)(@polkadot/api@10.9.1)(@polkadot/apps-config@0.124.1)(@polkadot/types@10.9.1):
+    resolution: {integrity: sha512-AEWo4ju59OeGjz022kA+yaDSbWIIQL1x/o7TTplo32zQmp6T3sX/kRWn/DXfu0P7cfuILyOsTbdPBUfIJ8RgPA==}
     peerDependencies:
       '@polkadot/api': ^10.6.1
       '@polkadot/api-base': ^10.6.1
