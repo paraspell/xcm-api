@@ -24,7 +24,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
-    "@paraspell/sdk": "^1.1.13",
+    "@paraspell/sdk": "^2.0.4",
     "@polkadot/api": "^10.9.1",
     "@polkadot/api-base": "^10.9.1",
     "@polkadot/apps-config": "^0.124.1",
