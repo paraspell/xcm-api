@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   NODE_NAMES,
   TNode,
@@ -17,14 +13,7 @@ import {
   getTNode,
   hasSupportForAsset,
 } from '@paraspell/sdk';
-
-const validateNode = (node: string) => {
-  if (!NODE_NAMES.includes(node as TNode)) {
-    throw new BadRequestException(
-      `Node ${node} is not valid. Check docs for valid nodes.`,
-    );
-  }
-};
+import { validateNode } from 'src/utils';
 
 @Injectable()
 export class AssetsService {

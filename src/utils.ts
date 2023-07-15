@@ -1,5 +1,8 @@
-import { InternalServerErrorException } from '@nestjs/common';
-import { TNode, getNodeEndpointOption } from '@paraspell/sdk';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { NODE_NAMES, TNode, getNodeEndpointOption } from '@paraspell/sdk';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 
 export const isNumeric = (num: any) => !isNaN(num);
@@ -20,4 +23,12 @@ export const findWsUrlByNode = (node: TNode) => {
   }
 
   return providers[0];
+};
+
+export const validateNode = (node: string) => {
+  if (!NODE_NAMES.includes(node as TNode)) {
+    throw new BadRequestException(
+      `Node ${node} is not valid. Check docs for valid nodes.`,
+    );
+  }
 };
