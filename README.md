@@ -150,7 +150,7 @@ Possible parameters:
 
 ```js
 //Return default pallet for specific Parachain
-const response = await fetch("http://localhost:3001/pallets/:node");
+const response = await fetch("http://localhost:3001/pallets/:node/default");
 
 //Return an array of supported pallets for specific Parachain
 const response = await fetch("http://localhost:3001/pallets/:node/supported");

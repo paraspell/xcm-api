@@ -3,7 +3,7 @@
     <b-navbar style="margin-bottom: 5%;">
       <template #start>
         <img style="width: 300x; height: 90px; margin-right: 5%; " src="./assets/lightSpell.png" />
-        <h1 style="margin-top: 2%;" class="name first" >XCM API Playground</h1>
+        <h1 style="margin-top: 3%;" class="name first" >Playground</h1>
        
       </template>
     </b-navbar>
@@ -24,8 +24,8 @@
     color: #2c3e50;
     background-color: white;
     margin-top: 20px;
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 15%;
+    margin-right: 15%;
   }
   .mainLogo {
     width: 4%;
