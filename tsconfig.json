@@ -1,4 +1,6 @@
 {
+  "include": ["src/**/*"],
+  "exclude": ["playground"],
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
