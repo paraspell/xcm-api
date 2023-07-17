@@ -300,7 +300,7 @@
                     this.data = JSON.stringify(await response.json(), null, 4);                    
                 }
               if(this.palletXCMOperation == "Return an array of supported pallets for specific Parachain"){
-                  let response = await fetch("http://localhost:3001/pallets/" + this.node + "/supported");
+                  let response = await fetch("http://localhost:3001/pallets/" + this.node);
                   this.data = JSON.stringify(await response.json(), null, 4);                    
               }
             }
