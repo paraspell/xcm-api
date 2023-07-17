@@ -37,7 +37,7 @@ export class AssetsService {
 
   getRelayChainSymbol(node: string) {
     validateNode(node);
-    return getRelayChainSymbol(node as TNode);
+    return JSON.stringify(getRelayChainSymbol(node as TNode));
   }
 
   getNativeAssets(node: string) {
@@ -81,6 +81,6 @@ export class AssetsService {
         `Node with parachain id ${paraId} not found.`,
       );
     }
-    return node;
+    return JSON.stringify(node);
   }
 }

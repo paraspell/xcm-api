@@ -153,7 +153,7 @@ Possible parameters:
 const response = await fetch("http://localhost:3001/pallets/:node/default");
 
 //Return an array of supported pallets for specific Parachain
-const response = await fetch("http://localhost:3001/pallets/:node/supported");
+const response = await fetch("http://localhost:3001/pallets/:node");
 ```
 
 ### HRMP Pallet
