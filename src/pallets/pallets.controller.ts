@@ -10,8 +10,8 @@ export class PalletsController {
     return this.palletsService.getDefaultPallet(node);
   }
 
-  @Get(':node/supported')
-  getSupportedPallets(@Param('node') node: string) {
-    return this.palletsService.getSupportedPallets(node);
+  @Get(':node')
+  getPallets(@Param('node') node: string) {
+    return this.palletsService.getPallets(node);
   }
 }
