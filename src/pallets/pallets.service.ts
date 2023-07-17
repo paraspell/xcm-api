@@ -6,10 +6,10 @@ import { validateNode } from 'src/utils';
 export class PalletsService {
   getDefaultPallet(node: string) {
     validateNode(node);
-    return getDefaultPallet(node as TNode);
+    return JSON.stringify(getDefaultPallet(node as TNode));
   }
 
-  getSupportedPallets(node: string) {
+  getPallets(node: string) {
     validateNode(node);
     return getSupportedPallets(node as TNode);
   }
