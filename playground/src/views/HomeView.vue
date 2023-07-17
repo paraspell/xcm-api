@@ -216,18 +216,34 @@
       methods: {
   
         async assignOperation(value: any){
+            this.xcmMessageScenario = ""
+            this.hrmpPalletOperation = ""
+            this.palletXCMOperation = ""
+            this.assetOperation = ""
             this.operation=value.target.value
         },
         async assignAssetOperation(value: any){
+            this.xcmMessageScenario = ""
+            this.hrmpPalletOperation = ""
+            this.palletXCMOperation = ""
             this.assetOperation=value.target.value
         },
         async assignHRMPOperation(value: any){
+            this.xcmMessageScenario = ""
+            this.assetOperation = ""
+            this.palletXCMOperation = ""
             this.hrmpPalletOperation=value.target.value
         },
         async assignXCMOperation(value: any){
+            this.hrmpPalletOperation = ""
+            this.assetOperation = ""
+            this.palletXCMOperation = ""
             this.xcmMessageScenario=value.target.value
         },
         async assignXCMPalletOperation(value: any){
+            this.xcmMessageScenario = ""
+            this.assetOperation = ""
+            this.hrmpPalletOperation = ""
             this.palletXCMOperation=value.target.value
         },
         async nodeAssign(value: any){
