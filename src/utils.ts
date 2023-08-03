@@ -2,7 +2,12 @@ import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { NODE_NAMES, TNode, getNodeEndpointOption } from '@paraspell/sdk';
+import {
+  NODE_NAMES,
+  TNode,
+  getNodeEndpointOption,
+  getRelayChainSymbol,
+} from '@paraspell/sdk';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 
 export const isNumeric = (num: any) => !isNaN(num);
@@ -31,4 +36,11 @@ export const validateNode = (node: string) => {
       `Node ${node} is not valid. Check docs for valid nodes.`,
     );
   }
+};
+
+export const getNodeRelayChainWsUrl = (destinationNode: TNode) => {
+  const symbol = getRelayChainSymbol(destinationNode);
+  const POLKADOT_WS = 'wss://kusama-rpc.polkadot.io';
+  const KUSAMA_WS = 'wss://rpc.polkadot.io';
+  return symbol === 'DOT' ? POLKADOT_WS : KUSAMA_WS;
 };
