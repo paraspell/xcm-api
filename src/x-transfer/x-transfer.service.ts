@@ -10,17 +10,13 @@ import {
   NODE_NAMES,
   TNode,
   TSerializedApiCall,
-  getRelayChainSymbol,
 } from '@paraspell/sdk';
 import { XTransferDto } from './dto/XTransferDto';
-import { createApiInstance, findWsUrlByNode } from 'src/utils';
-
-const getNodeRelayChainWsUrl = (destinationNode: TNode) => {
-  const symbol = getRelayChainSymbol(destinationNode);
-  const POLKADOT_WS = 'wss://kusama-rpc.polkadot.io';
-  const KUSAMA_WS = 'wss://rpc.polkadot.io';
-  return symbol === 'DOT' ? POLKADOT_WS : KUSAMA_WS;
-};
+import {
+  createApiInstance,
+  findWsUrlByNode,
+  getNodeRelayChainWsUrl,
+} from 'src/utils';
 
 const determineWsUrl = (fromNode?: TNode, destinationNode?: TNode) => {
   return fromNode

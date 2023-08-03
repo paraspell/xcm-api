@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsNumberString } from 'class-validator';
 
 export class XTransferDto {
-  from: string;
-  to: string;
+  from?: string;
+  to?: string;
 
   @IsNotEmpty()
   @IsNumberString()
@@ -11,5 +11,5 @@ export class XTransferDto {
   @IsNotEmpty()
   address: string;
 
-  currency: string;
+  currency?: string;
 }

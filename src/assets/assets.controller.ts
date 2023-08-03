@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { AssetsService } from './assets.service';
 import { isNumeric } from 'src/utils';
 
@@ -46,7 +46,7 @@ export class AssetsController {
   }
 
   @Get(':node/decimals/:symbol')
-  decimals(@Param('node') node: string, @Param('symbol') symbol: string) {
+  getDecimals(@Param('node') node: string, @Param('symbol') symbol: string) {
     return this.assetsService.getDecimals(node, symbol);
   }
 
