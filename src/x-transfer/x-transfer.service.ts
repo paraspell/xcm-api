@@ -12,17 +12,7 @@ import {
   TSerializedApiCall,
 } from '@paraspell/sdk';
 import { XTransferDto } from './dto/XTransferDto';
-import {
-  createApiInstance,
-  findWsUrlByNode,
-  getNodeRelayChainWsUrl,
-} from 'src/utils';
-
-const determineWsUrl = (fromNode?: TNode, destinationNode?: TNode) => {
-  return fromNode
-    ? findWsUrlByNode(fromNode)
-    : getNodeRelayChainWsUrl(destinationNode);
-};
+import { createApiInstance, determineWsUrl } from '../utils';
 
 @Injectable()
 export class XTransferService {

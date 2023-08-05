@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { AssetsService } from './assets.service';
-import { isNumeric } from 'src/utils';
+import { isNumeric } from '../utils';
+import { SymbolDto } from './dto/SymbolDto';
 
 @Controller('assets')
 export class AssetsController {
@@ -20,8 +21,8 @@ export class AssetsController {
     return this.assetsService.getAssetsObject(nodeOrParaId);
   }
 
-  @Get(':node/id/:symbol')
-  getAssetId(@Param('node') node: string, @Param('symbol') symbol: string) {
+  @Get(':node/id')
+  getAssetId(@Param('node') node: string, @Query() { symbol }: SymbolDto) {
     return this.assetsService.getAssetId(node, symbol);
   }
 
@@ -45,15 +46,15 @@ export class AssetsController {
     return this.assetsService.getAllAssetsSymbols(node);
   }
 
-  @Get(':node/decimals/:symbol')
-  getDecimals(@Param('node') node: string, @Param('symbol') symbol: string) {
+  @Get(':node/decimals')
+  getDecimals(@Param('node') node: string, @Query() { symbol }: SymbolDto) {
     return this.assetsService.getDecimals(node, symbol);
   }
 
-  @Get(':node/has-support/:symbol')
+  @Get(':node/has-support')
   hasSupportForAsset(
     @Param('node') node: string,
-    @Param('symbol') symbol: string,
+    @Query() { symbol }: SymbolDto,
   ) {
     return this.assetsService.hasSupportForAsset(node, symbol);
   }

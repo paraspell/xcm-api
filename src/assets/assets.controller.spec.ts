@@ -92,7 +92,7 @@ describe('AssetsController', () => {
       const mockResult = '1';
       jest.spyOn(assetsService, 'getAssetId').mockReturnValue(mockResult);
 
-      const result = controller.getAssetId(node, symbol);
+      const result = controller.getAssetId(node, { symbol });
 
       expect(result).toBe(mockResult);
       expect(assetsService.getAssetId).toHaveBeenCalledWith(node, symbol);
@@ -156,7 +156,7 @@ describe('AssetsController', () => {
       const mockResult = 18;
       jest.spyOn(assetsService, 'getDecimals').mockReturnValue(mockResult);
 
-      const result = controller.getDecimals(node, symbol);
+      const result = controller.getDecimals(node, { symbol });
 
       expect(result).toBe(mockResult);
       expect(assetsService.getDecimals).toHaveBeenCalledWith(node, symbol);
@@ -170,7 +170,7 @@ describe('AssetsController', () => {
         .spyOn(assetsService, 'hasSupportForAsset')
         .mockReturnValue(mockResult);
 
-      const result = controller.hasSupportForAsset(node, symbol);
+      const result = controller.hasSupportForAsset(node, { symbol });
 
       expect(result).toBe(mockResult);
       expect(assetsService.hasSupportForAsset).toHaveBeenCalledWith(

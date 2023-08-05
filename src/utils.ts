@@ -44,3 +44,9 @@ export const getNodeRelayChainWsUrl = (destinationNode: TNode) => {
   const KUSAMA_WS = 'wss://rpc.polkadot.io';
   return symbol === 'DOT' ? POLKADOT_WS : KUSAMA_WS;
 };
+
+export const determineWsUrl = (fromNode?: TNode, destinationNode?: TNode) => {
+  return fromNode
+    ? findWsUrlByNode(fromNode)
+    : getNodeRelayChainWsUrl(destinationNode);
+};
