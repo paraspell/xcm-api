@@ -13,7 +13,7 @@ import {
   getTNode,
   hasSupportForAsset,
 } from '@paraspell/sdk';
-import { validateNode } from 'src/utils';
+import { validateNode } from '../utils';
 
 @Injectable()
 export class AssetsService {
@@ -58,7 +58,7 @@ export class AssetsService {
   getDecimals(node: string, symbol: string) {
     validateNode(node);
     const decimals = getAssetDecimals(node as TNode, symbol);
-    if (!decimals) {
+    if (decimals === null) {
       throw new NotFoundException(`Decimals for currency ${symbol} not found.`);
     }
     return decimals;
