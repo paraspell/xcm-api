@@ -269,7 +269,7 @@
                     this.data = JSON.stringify(await response.json(), null, 4);                    
                 }
                 if(this.assetOperation == "Retrieve asset id for particular Parachain and asset"){
-                    let response = await fetch("http://localhost:3001/assets/" + this.node + "/id/" + this.symbol);
+                    let response = await fetch("http://localhost:3001/assets/" + this.node + "/id?symbol=" + this.symbol);
                     this.data = JSON.stringify(await response.json(), null, 4);                    
                 }
                 if(this.assetOperation == "Retrieve the Relay chain asset Symbol for a particular Parachain"){
@@ -289,11 +289,11 @@
                     this.data = JSON.stringify(await response.json(), null, 4);                    
                 }
                 if(this.assetOperation == "Retrieve support for a particular asset on a particular Parachain"){
-                    let response = await fetch("http://localhost:3001/assets/" + this.node + "/has-support/" + this.symbol);
+                    let response = await fetch("http://localhost:3001/assets/" + this.node + "/has-support?symbol=" + this.symbol);
                     this.data = JSON.stringify(await response.json(), null, 4);                    
                 }
                 if(this.assetOperation == "Retrieve decimals for a particular asset for a particular Parachain"){
-                    let response = await fetch("http://localhost:3001/assets/" + this.node + "/decimals/" + this.symbol);
+                    let response = await fetch("http://localhost:3001/assets/" + this.node + "/decimals?symbol=" + this.symbol);
                     this.data = JSON.stringify(await response.json(), null, 4);                    
                 }
                 if(this.assetOperation == "Retrieve Parachain id for a particular Parachain"){
