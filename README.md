@@ -236,14 +236,11 @@ $ pnpm run start
 These tests will be implemented soon. Try using Playground for now.
 
 ```bash
-# unit tests
+# unit & integration tests
 $ pnpm run test
 
 # e2e tests
 $ pnpm run test:e2e
-
-# integration
-$ pnpm run test:int
 
 # test coverage
 $ pnpm run test:cov
