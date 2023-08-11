@@ -11,6 +11,9 @@ import { AuthGuard } from './auth/auth.guard';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './users/user.entity';
+import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
@@ -20,12 +23,31 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     PalletsModule,
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
-    ThrottlerModule.forRootAsync({
+    TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        ttl: config.get('RATE_LIMIT_TTL_SEC'),
+        type: 'postgres',
+        host: config.get('DB_HOST'),
+        port: config.get('DB_PORT'),
+        username: config.get('DB_USER'),
+        password: config.get('DB_PASS'),
+        database: config.get('DB_NAME'),
+        entities: [User],
+        synchronize: true,
+      }),
+    }),
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService, UsersService],
+      useFactory: (config: ConfigService) => ({
+        ttl:
+          process.env.NODE_ENV === 'test'
+            ? 0
+            : config.get('RATE_LIMIT_TTL_SEC'),
         limit: (context) => {
           const request = context.switchToHttp().getRequest();
+          if (request.user && request.user.requestLimit) {
+            return request.user.requestLimit;
+          }
           return request.user
             ? config.get('RATE_LIMIT_REQ_COUNT_AUTH')
             : config.get('RATE_LIMIT_REQ_COUNT_PUBLIC');
@@ -34,7 +56,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
-      renderPath: '/generate-api-key',
+      serveRoot: '/app',
     }),
   ],
   controllers: [AppController],

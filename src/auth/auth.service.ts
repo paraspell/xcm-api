@@ -1,39 +1,79 @@
-import {
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import axios from 'axios';
+import { HigherRequestLimitDto } from './dto/HigherRequestLimitDto';
+import { validateRecaptcha } from '../utils';
+import { sendEmail } from './utils/utils';
+import { generateConfirmationEmailHtml } from './utils/generateConfirmationEmailHtml';
+import { generateNewHigherLimitRequestHtml } from './utils/generateNewHigherLimitRequestHtml';
+import { ConfigService } from '@nestjs/config';
+import { UsersService } from '../users/users.service';
+
+const sendEmails = async (
+  { email, reason, requestedLimit }: HigherRequestLimitDto,
+  userId: string,
+  configService: ConfigService,
+) => {
+  const title = 'Request Submission Confirmation';
+  await sendEmail(
+    title,
+    generateConfirmationEmailHtml(title, reason, requestedLimit),
+    email,
+    configService,
+  );
+  const emailsVal = configService.get('EMAIL_ADDRESS_RECIPIENT_ARR');
+  if (emailsVal) {
+    const emails = emailsVal.split(',');
+    const title = 'New higher limit request';
+    await Promise.all(
+      emails.map((email) =>
+        sendEmail(
+          title,
+          generateNewHigherLimitRequestHtml(
+            email,
+            userId,
+            reason,
+            requestedLimit,
+          ),
+          email,
+          configService,
+        ),
+      ),
+    );
+  }
+};
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private usersService: UsersService,
+    private configService: ConfigService,
+  ) {}
 
   async generateApiKey(recaptcha: string) {
-    const recaptchaSecretKey = '6LfL0oYnAAAAABX3l2hJrzxhoQZJQGfZKuUcZyTt';
-
-    const data = {
-      secret: recaptchaSecretKey,
-      response: recaptcha,
-    };
-
-    const response = await axios
-      .post('https://www.google.com/recaptcha/api/siteverify', null, {
-        params: data,
-      })
-      .catch((error) => {
-        throw new InternalServerErrorException(
-          'Error verifying reCAPTCHA: ' + error,
-        );
-      });
-
-    const verificationResult = response.data;
-    if (verificationResult.success) {
-      const payload = {};
+    const verificationResult = await validateRecaptcha(
+      recaptcha,
+      this.configService.get('RECAPTCHA_SECRET_KEY'),
+    );
+    if (verificationResult) {
+      const { id } = await this.usersService.create();
+      const payload = { userId: id };
       return {
         api_key: await this.jwtService.signAsync(payload),
       };
+    } else {
+      throw new ForbiddenException('Recaptcha verification failed');
+    }
+  }
+
+  async submitHigherRequestLimitForm(dto: HigherRequestLimitDto) {
+    const verificationResult = await validateRecaptcha(
+      dto['g-recaptcha-response'],
+      this.configService.get('RECAPTCHA_SECRET_KEY'),
+    );
+    if (verificationResult) {
+      const { userId } = this.jwtService.verify(dto.api_key);
+      await sendEmails(dto, userId, this.configService);
     } else {
       throw new ForbiddenException('Recaptcha verification failed');
     }

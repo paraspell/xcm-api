@@ -5,10 +5,14 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private usersService: UsersService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -19,8 +23,10 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const decoded = this.jwtService.verify(apiKey);
-      request.user = decoded;
+      const { userId } = this.jwtService.verify(apiKey);
+      if (!userId) throw new ForbiddenException('Invalid API key.');
+      const dbUser = await this.usersService.findOne(userId);
+      request.user = dbUser;
       return true;
     } catch (error) {
       throw new ForbiddenException(
