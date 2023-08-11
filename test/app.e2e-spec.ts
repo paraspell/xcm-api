@@ -25,7 +25,7 @@ describe('XCM API (e2e)', () => {
   const mockSymbol = 'DOT';
   const unknownNode = 'UnknownNode';
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
