@@ -24,9 +24,11 @@ Enhance the cross-chain experience of your Polkadot/Kusama decentralized applica
 [4. Running the API locally](#running-the-api-locally)<br />
 &nbsp;&nbsp;[4.1 Installation](#installation)<br />
 &nbsp;&nbsp;[4.2 Start nest server](#start-nest-server)<br />
-[5. Tests](#tests)<br />
-&nbsp;&nbsp;[5.1 API playground](#api-playground)<br />
-&nbsp;&nbsp;[5.2 API tests](#api-tests)<br />
+[5. Upgrading request per minute count](#upgrading-request-per-minute-count)<br />
+[6. Deploying API yourself](#deploying-api-yourself)<br />
+[7. Tests](#tests)<br />
+&nbsp;&nbsp;[7.1 API playground](#api-playground)<br />
+&nbsp;&nbsp;[7.2 API tests](#api-tests)<br />
 
 ## Live status
 XCM API will be deployed live and endpoints will be available to be used for everyone for free within 2 months. Stay tuned.
@@ -213,6 +215,12 @@ $ pnpm run start:dev
 # production mode
 $ pnpm run start:prod
 ```
+
+## Upgrading request per minute count
+For guidance on this topic head to following [documentation section](https://paraspell.github.io/docs/api/upgrade.html)
+
+## Deploying API yourself
+For guidance on this topic head to following [documentation section](https://paraspell.github.io/docs/api/deploy.html)
 
 ## Tests
 The following section contains various test types (unit, e2e, integration, coverage) and a test playground that allows you to fully test API capabilities.
