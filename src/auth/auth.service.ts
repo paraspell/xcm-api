@@ -3,10 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import { HigherRequestLimitDto } from './dto/HigherRequestLimitDto';
 import { validateRecaptcha } from '../utils';
 import { sendEmail } from './utils/utils';
-import { generateConfirmationEmailHtml } from './utils/generateConfirmationEmailHtml';
-import { generateNewHigherLimitRequestHtml } from './utils/generateNewHigherLimitRequestHtml';
 import { ConfigService } from '@nestjs/config';
 import { UsersService } from '../users/users.service';
+import { generateConfirmationEmailHtml } from './utils/generateConfirmationEmailHtml';
+import { generateNewHigherLimitRequestHtml } from './utils/generateNewHigherLimitRequestHtml';
 
 const sendEmails = async (
   { email, reason, requestedLimit }: HigherRequestLimitDto,
@@ -25,7 +25,7 @@ const sendEmails = async (
     const emails = emailsVal.split(',');
     const title = 'New higher limit request';
     await Promise.all(
-      emails.map((email) =>
+      emails.map((adminEmail) =>
         sendEmail(
           title,
           generateNewHigherLimitRequestHtml(
@@ -34,7 +34,7 @@ const sendEmails = async (
             reason,
             requestedLimit,
           ),
-          email,
+          adminEmail,
           configService,
         ),
       ),
