@@ -217,10 +217,10 @@ $ pnpm run start:prod
 ```
 
 ## Upgrading request per minute count
-For guidance on this topic head to following [documentation section](https://paraspell.github.io/docs/api/upgrade.html)
+For guidance on this topic head to following [documentation section](https://paraspell.github.io/docs/api/upgrade.html).
 
 ## Deploying API yourself
-For guidance on this topic head to following [documentation section](https://paraspell.github.io/docs/api/deploy.html)
+For guidance on this topic head to following [documentation section](https://paraspell.github.io/docs/api/deploy.html).
 
 ## Tests
 The following section contains various test types (unit, e2e, integration, coverage) and a test playground that allows you to fully test API capabilities.
