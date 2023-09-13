@@ -40,13 +40,16 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "googleapis": "^124.0.0",
+    "mixpanel": "^0.18.0",
     "nodemailer": "^6.9.4",
     "pg": "^8.11.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "ua-parser-js": "^1.0.36"
   },
   "devDependencies": {
+    "@golevelup/ts-jest": "^0.4.0",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
@@ -55,6 +58,7 @@
     "@types/node": "^20.3.1",
     "@types/nodemailer": "^6.4.9",
     "@types/supertest": "^2.0.12",
+    "@types/ua-parser-js": "^0.7.37",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
     "eslint": "^8.42.0",

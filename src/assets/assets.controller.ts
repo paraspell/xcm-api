@@ -1,53 +1,93 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Req } from '@nestjs/common';
 import { AssetsService } from './assets.service';
 import { isNumeric } from '../utils';
 import { SymbolDto } from './dto/SymbolDto';
+import { AnalyticsService } from '../analytics/analytics.service';
+import { EventName } from '../analytics/EventName';
 
 @Controller('assets')
 export class AssetsController {
-  constructor(private readonly assetsService: AssetsService) {}
+  constructor(
+    private assetsService: AssetsService,
+    private analyticsService: AnalyticsService,
+  ) {}
 
   @Get()
-  getNodeNames() {
+  getNodeNames(@Req() req) {
+    this.analyticsService.track(EventName.GET_NODE_NAMES, req);
     return this.assetsService.getNodeNames();
   }
 
   @Get(':node')
-  getAssetsObject(@Param('node') nodeOrParaId: string) {
+  getAssetsObject(@Param('node') nodeOrParaId: string, @Req() req) {
     const isParaId = isNumeric(nodeOrParaId);
     if (isParaId) {
+      this.analyticsService.track(EventName.GET_NODE_BY_PARA_ID, req, {
+        paraId: nodeOrParaId,
+      });
       return this.assetsService.getNodeByParaId(Number(nodeOrParaId));
     }
+    this.analyticsService.track(EventName.GET_ASSETS_OBJECT, req, {
+      node: nodeOrParaId,
+    });
     return this.assetsService.getAssetsObject(nodeOrParaId);
   }
 
   @Get(':node/id')
-  getAssetId(@Param('node') node: string, @Query() { symbol }: SymbolDto) {
+  getAssetId(
+    @Param('node') node: string,
+    @Query() { symbol }: SymbolDto,
+    @Req() req,
+  ) {
+    this.analyticsService.track(EventName.GET_ASSET_ID, req, {
+      node,
+      symbol,
+    });
     return this.assetsService.getAssetId(node, symbol);
   }
 
   @Get(':node/relay-chain-symbol')
-  getRelayChainSymbol(@Param('node') node: string) {
+  getRelayChainSymbol(@Param('node') node: string, @Req() req) {
+    this.analyticsService.track(EventName.GET_RELAYCHAIN_SYMBOL, req, {
+      node,
+    });
     return this.assetsService.getRelayChainSymbol(node);
   }
 
   @Get(':node/native')
-  getNativeAssets(@Param('node') node: string) {
+  getNativeAssets(@Param('node') node: string, @Req() req) {
+    this.analyticsService.track(EventName.GET_NATIVE_ASSETS, req, {
+      node,
+    });
     return this.assetsService.getNativeAssets(node);
   }
 
   @Get(':node/other')
-  getOtherAssets(@Param('node') node: string) {
+  getOtherAssets(@Param('node') node: string, @Req() req) {
+    this.analyticsService.track(EventName.GET_OTHER_ASSETS, req, {
+      node,
+    });
     return this.assetsService.getOtherAssets(node);
   }
 
   @Get(':node/all-symbols')
-  getAllAssetsSymbol(@Param('node') node: string) {
+  getAllAssetsSymbol(@Param('node') node: string, @Req() req) {
+    this.analyticsService.track(EventName.GET_ALL_ASSETS_SYMBOLS, req, {
+      node,
+    });
     return this.assetsService.getAllAssetsSymbols(node);
   }
 
   @Get(':node/decimals')
-  getDecimals(@Param('node') node: string, @Query() { symbol }: SymbolDto) {
+  getDecimals(
+    @Param('node') node: string,
+    @Query() { symbol }: SymbolDto,
+    @Req() req,
+  ) {
+    this.analyticsService.track(EventName.GET_DECIMALS, req, {
+      node,
+      symbol,
+    });
     return this.assetsService.getDecimals(node, symbol);
   }
 
@@ -55,12 +95,20 @@ export class AssetsController {
   hasSupportForAsset(
     @Param('node') node: string,
     @Query() { symbol }: SymbolDto,
+    @Req() req,
   ) {
+    this.analyticsService.track(EventName.HAS_SUPPORT_FOR_ASSET, req, {
+      node,
+      symbol,
+    });
     return this.assetsService.hasSupportForAsset(node, symbol);
   }
 
   @Get(':node/para-id')
-  getParaId(@Param('node') node: string) {
+  getParaId(@Param('node') node: string, @Req() req) {
+    this.analyticsService.track(EventName.GET_PARA_ID, req, {
+      node,
+    });
     return this.assetsService.getParaId(node);
   }
 }

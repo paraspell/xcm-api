@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PalletsController } from './pallets.controller';
 import { PalletsService } from './pallets.service';
 import { TNode, TPallet } from '@paraspell/sdk';
+import { mockRequestObject } from 'src/testUtils';
+import { AnalyticsService } from 'src/analytics/analytics.service';
+import { createMock } from '@golevelup/ts-jest';
 
 // Integration tests to ensure controller and service are working together
 describe('PalletsController', () => {
@@ -12,7 +15,10 @@ describe('PalletsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PalletsController],
-      providers: [PalletsService],
+      providers: [
+        PalletsService,
+        { provide: AnalyticsService, useValue: createMock<AnalyticsService>() },
+      ],
     }).compile();
 
     controller = module.get<PalletsController>(PalletsController);
@@ -30,7 +36,7 @@ describe('PalletsController', () => {
         .spyOn(palletsService, 'getDefaultPallet' as any)
         .mockResolvedValue(defaultPallet);
 
-      const result = await controller.getDefaultPallet(node);
+      const result = await controller.getDefaultPallet(node, mockRequestObject);
 
       expect(result).toBe(defaultPallet);
       expect(palletsService.getDefaultPallet).toHaveBeenCalledWith(node);
@@ -44,7 +50,7 @@ describe('PalletsController', () => {
         .spyOn(palletsService, 'getPallets' as any)
         .mockResolvedValue(pallets);
 
-      const result = await controller.getPallets(node);
+      const result = await controller.getPallets(node, mockRequestObject);
 
       expect(result).toBe(pallets);
       expect(palletsService.getPallets).toHaveBeenCalledWith(node);
