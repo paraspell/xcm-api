@@ -31,24 +31,24 @@ Enhance the cross-chain experience of your Polkadot/Kusama decentralized applica
 &nbsp;&nbsp;[7.2 API tests](#api-tests)<br />
 
 ## Live status
-XCM API will be deployed live and endpoints will be available to be used for everyone for free within 2 months. Stay tuned.
+API is now deployed on the live server and accessible on the following link: https://api.lightspell.xyz/
 
 ## Introduction
-Our team focuses on the unification of cross-chain communication in Polkadot and Kusama ecosystems for a while now. Our latest and flagship addition is XCM API also known as LightSpell⚡️. This tool allows you to implement cross-chain interoperability into your application within moments.
+Our team focuses on the unification of cross-chain communication in the Polkadot and Kusama ecosystems for a while now. Our latest and flagship addition is XCM API also known as LightSpell⚡️. This tool allows you to implement cross-chain interoperability into your application within moments.
 
 **Reasons to use XCM API for interoperability integration into your application:**
-- Complex logic is handled by XCM API and you are only required to provide basic details to create calls (Junctions and other complex details are auto-filled for you)
+- XCM API handles complex logic and you are only required to provide basic details to create calls (Junctions and other complex details are auto-filled for you)
 - Offloads your server from heavy computing required to construct calls (You receive constructed message already)
 - Saves you server costs (Because of the reason mentioned above)
 - Package-less integration (No need to install anything)
-- Simple to implement (Constructed to be as dev friendly as possible)
+- Simple to implement (Constructed to be as dev-friendly as possible)
 
 ## Problem statement
 The interoperability experience on Polkadot & Kusama is very diverse for developers. Currently, XCM has the following problems our XCM API &  XCM SDK tries to overcome them for you:
 - Different XCM versions implemented across Parachains (Some still have V1 others switched to the latest V3 already)
 - Multiple variations and differences of XCM Pallets across Parachains (eg. asset selection mechanism on xTokens, some Parachains use asset id (eg. Basilisk) to select assets others have multilayer asset selection (eg. Acala) this can be observed [in this picture](https://user-images.githubusercontent.com/55763425/253806931-3fa05b86-627c-46bc-a4ab-c5c2cd619b35.png).)
 - Ecosystem has 4 different XCM Pallets (PolkadotXCM, OrlmXTokens, xTokens, PalletXCM)
-- To novices in the ecosystem it can be hard to find which Parachains are HRMP-connected and XCM compatible
+- To novices in the ecosystem it can be hard to find which Parachains are HRMP-connected and XCM-compatible
 - Parachains have their own Asset registration systems and they have different assets (Can lead to asset loss if a novice sends an asset that is not registered on the destination chain)
 
 Our XCM API solves this by implementing XCM SDK which researched every compatible Parachain XCM Pallet and integrated support for them and their variations. XCM SDK is updated regularly to keep every integrated Parachain up to date. XCM SDK unifies XCM message construction to simple patterns. Our XCM API can utilize this and enhance it making XCM call construction a matter of seconds instead of hours or days. XCM API and XCM SDK also feature user error prevention (Inability to construct a message from Parachain on Polkadot to Parachain on Kusama, inability to construct a message if the asset is not registered on the destination or origin chain and many more). **XCM API can greatly reduce application development times, save server costs and boost the ecosystem with new fresh projects**.
