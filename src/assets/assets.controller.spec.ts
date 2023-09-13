@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AssetsController } from './assets.controller';
 import { AssetsService } from './assets.service';
 import { TNode } from '@paraspell/sdk';
+import { mockRequestObject } from 'src/testUtils';
+import { AnalyticsService } from 'src/analytics/analytics.service';
+import { createMock } from '@golevelup/ts-jest';
 
 // Integration tests to ensure controller and service are working together
 describe('AssetsController', () => {
@@ -14,7 +17,10 @@ describe('AssetsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AssetsController],
-      providers: [AssetsService],
+      providers: [
+        AssetsService,
+        { provide: AnalyticsService, useValue: createMock<AnalyticsService>() },
+      ],
     }).compile();
 
     controller = module.get<AssetsController>(AssetsController);
@@ -32,7 +38,7 @@ describe('AssetsController', () => {
         .spyOn(assetsService, 'getNodeNames' as any)
         .mockReturnValue(mockResult);
 
-      const result = controller.getNodeNames();
+      const result = controller.getNodeNames(mockRequestObject);
 
       expect(result).toBe(mockResult);
       expect(assetsService.getNodeNames).toHaveBeenCalled();
@@ -46,7 +52,7 @@ describe('AssetsController', () => {
         .spyOn(assetsService, 'getNodeNames' as any)
         .mockReturnValue(mockResult);
 
-      const result = controller.getNodeNames();
+      const result = controller.getNodeNames(mockRequestObject);
 
       expect(result).toBe(mockResult);
       expect(assetsService.getNodeNames).toHaveBeenCalled();
@@ -65,7 +71,7 @@ describe('AssetsController', () => {
         .spyOn(assetsService, 'getAssetsObject' as any)
         .mockReturnValue(mockResult);
 
-      const result = controller.getAssetsObject(node);
+      const result = controller.getAssetsObject(node, mockRequestObject);
 
       expect(result).toBe(mockResult);
       expect(assetsService.getAssetsObject).toHaveBeenCalledWith(node);
@@ -77,7 +83,7 @@ describe('AssetsController', () => {
         .spyOn(assetsService, 'getNodeByParaId' as any)
         .mockReturnValue(mockResult);
 
-      const result = controller.getAssetsObject(paraId);
+      const result = controller.getAssetsObject(paraId, mockRequestObject);
 
       expect(result).toBe(mockResult);
       expect(assetsService.getNodeByParaId).toHaveBeenCalledWith(
@@ -92,7 +98,7 @@ describe('AssetsController', () => {
       const mockResult = '1';
       jest.spyOn(assetsService, 'getAssetId').mockReturnValue(mockResult);
 
-      const result = controller.getAssetId(node, { symbol });
+      const result = controller.getAssetId(node, { symbol }, mockRequestObject);
 
       expect(result).toBe(mockResult);
       expect(assetsService.getAssetId).toHaveBeenCalledWith(node, symbol);
@@ -106,7 +112,7 @@ describe('AssetsController', () => {
         .spyOn(assetsService, 'getRelayChainSymbol')
         .mockReturnValue(mockResult);
 
-      const result = controller.getRelayChainSymbol(node);
+      const result = controller.getRelayChainSymbol(node, mockRequestObject);
 
       expect(result).toBe(mockResult);
       expect(assetsService.getRelayChainSymbol).toHaveBeenCalledWith(node);
@@ -118,7 +124,7 @@ describe('AssetsController', () => {
       const mockResult = [{ symbol, decimals }];
       jest.spyOn(assetsService, 'getNativeAssets').mockReturnValue(mockResult);
 
-      const result = controller.getNativeAssets(node);
+      const result = controller.getNativeAssets(node, mockRequestObject);
 
       expect(result).toBe(mockResult);
       expect(assetsService.getNativeAssets).toHaveBeenCalledWith(node);
@@ -130,7 +136,7 @@ describe('AssetsController', () => {
       const mockResult = [{ assetId: '234123123', symbol: 'FKK', decimals }];
       jest.spyOn(assetsService, 'getOtherAssets').mockReturnValue(mockResult);
 
-      const result = controller.getOtherAssets(node);
+      const result = controller.getOtherAssets(node, mockRequestObject);
 
       expect(result).toBe(mockResult);
       expect(assetsService.getOtherAssets).toHaveBeenCalledWith(node);
@@ -144,7 +150,7 @@ describe('AssetsController', () => {
         .spyOn(assetsService, 'getAllAssetsSymbols')
         .mockReturnValue(mockResult);
 
-      const result = controller.getAllAssetsSymbol(node);
+      const result = controller.getAllAssetsSymbol(node, mockRequestObject);
 
       expect(result).toBe(mockResult);
       expect(assetsService.getAllAssetsSymbols).toHaveBeenCalledWith(node);
@@ -156,7 +162,11 @@ describe('AssetsController', () => {
       const mockResult = 18;
       jest.spyOn(assetsService, 'getDecimals').mockReturnValue(mockResult);
 
-      const result = controller.getDecimals(node, { symbol });
+      const result = controller.getDecimals(
+        node,
+        { symbol },
+        mockRequestObject,
+      );
 
       expect(result).toBe(mockResult);
       expect(assetsService.getDecimals).toHaveBeenCalledWith(node, symbol);
@@ -170,7 +180,11 @@ describe('AssetsController', () => {
         .spyOn(assetsService, 'hasSupportForAsset')
         .mockReturnValue(mockResult);
 
-      const result = controller.hasSupportForAsset(node, { symbol });
+      const result = controller.hasSupportForAsset(
+        node,
+        { symbol },
+        mockRequestObject,
+      );
 
       expect(result).toBe(mockResult);
       expect(assetsService.hasSupportForAsset).toHaveBeenCalledWith(
@@ -185,7 +199,7 @@ describe('AssetsController', () => {
       const mockResult = 2009;
       jest.spyOn(assetsService, 'getParaId').mockReturnValue(mockResult);
 
-      const result = controller.getParaId(node);
+      const result = controller.getParaId(node, mockRequestObject);
 
       expect(result).toBe(mockResult);
       expect(assetsService.getParaId).toHaveBeenCalledWith(node);

@@ -14,9 +14,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
 import { UsersService } from './users/users.service';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
+    AnalyticsModule,
     XTransferModule,
     AssetsModule,
     ChannelsModule,

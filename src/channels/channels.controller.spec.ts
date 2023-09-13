@@ -3,6 +3,9 @@ import { ChannelsController } from './channels.controller';
 import { ChannelsService } from './channels.service';
 import { OpenChannelDto } from './dto/open-channel.dto';
 import { CloseChannelDto } from './dto/close-channel.dto';
+import { createMock } from '@golevelup/ts-jest';
+import { AnalyticsService } from 'src/analytics/analytics.service';
+import { mockRequestObject } from 'src/testUtils';
 
 // Integration tests to ensure controller and service are working together
 describe('ChannelsController', () => {
@@ -12,7 +15,10 @@ describe('ChannelsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ChannelsController],
-      providers: [ChannelsService],
+      providers: [
+        ChannelsService,
+        { provide: AnalyticsService, useValue: createMock<AnalyticsService>() },
+      ],
     }).compile();
 
     controller = module.get<ChannelsController>(ChannelsController);
@@ -36,7 +42,10 @@ describe('ChannelsController', () => {
         .spyOn(channelsService, 'openChannel' as any)
         .mockResolvedValue(mockResult);
 
-      const result = await controller.openChannel(openChannelDto);
+      const result = await controller.openChannel(
+        openChannelDto,
+        mockRequestObject,
+      );
 
       expect(result).toBe(mockResult);
       expect(channelsService.openChannel).toHaveBeenCalledWith(openChannelDto);
@@ -55,7 +64,10 @@ describe('ChannelsController', () => {
         .spyOn(channelsService, 'closeChannel' as any)
         .mockResolvedValue(mockResult);
 
-      const result = await controller.closeChannel(closeChannelDto);
+      const result = await controller.closeChannel(
+        closeChannelDto,
+        mockRequestObject,
+      );
 
       expect(result).toBe(mockResult);
       expect(channelsService.closeChannel).toHaveBeenCalledWith(
