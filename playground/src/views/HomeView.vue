@@ -149,7 +149,12 @@
         <b-input expanded @input.native="addrAssign($event)" v-model="address"></b-input>
       </b-field>
 
-      <b-button class="buttonn" expanded type="is-primary" @click="generateResponse()">Generate API response</b-button>
+      <b-field v-if="operation == 'API KEY testing'"  class="textt" label-position="inside" label="Provide your API key (OPTIONAL).">
+        <b-input expanded @input.native="apiKeySet($event)" v-model="apikey"></b-input>
+      </b-field>
+
+      <b-button v-if="operation!='API KEY testing'" class="buttonn" expanded type="is-primary" @click="generateResponse()">Generate API response</b-button>
+      <b-button v-if="operation=='API KEY testing'" class="buttonn" expanded type="is-primary" @click="generateResponse()">Test API request limit</b-button>
       <h1 v-if="data != ''" class="name">Your generated response is</h1>
       <pre v-if="data != ''" style="text-align: left">{{ data }}</pre>
 
@@ -178,7 +183,8 @@
             xcmMessageScenario: "" as string,
             xcmMessageScenarios: [] as Array<string>,
             hrmpPalletOperation: "" as string,
-            hrmpPalletOperations: [] as Array<string>
+            hrmpPalletOperations: [] as Array<string>,
+            apikey: "" as string,
             
           };
         },
@@ -189,6 +195,7 @@
         this.operations.push("Asset Query operations")
         this.operations.push("XCM Pallet Query operations")
         this.operations.push("HRMP Pallet operations")
+        this.operations.push("API KEY testing")
 
         this.assetOperations.push("Retrieve assets object for a specific Parachain")
         this.assetOperations.push("Retrieve asset id for particular Parachain and asset")
@@ -260,6 +267,9 @@
         },
         async amountAssign(value: any){
             this.amount=value.target.value
+        },
+        async apiKeySet(value: any){
+            this.apikey=value.target.value
         },
 
         async generateResponse(){
@@ -345,6 +355,41 @@
                   let response = await fetch("http://localhost:3001/x-transfer?" + new URLSearchParams({to: this.node2, amount: this.amount, address: this.address}));
                   this.data = JSON.stringify(await response.json(), null, 4);                    
               }
+            }
+
+            if(this.operation == "API KEY testing"){
+              let counter = 1
+
+              while(counter){
+
+                if (this.apikey != "")
+                {
+                  let response = await fetch("http://localhost:3001/assets/Basilisk/id?symbol=KSM", { headers: new Headers({ 'X-API-KEY': this.apikey }) });
+                  this.data = JSON.stringify(await response.json(), null, 4);
+
+                  if(this.data!="1"){
+                    break;
+                  }
+
+                  this.data = "Request number" + counter + this.data;
+
+                  counter++;  
+                }
+                else{
+                  let response = await fetch("http://localhost:3001/assets/Basilisk/id?symbol=KSM");
+                  this.data = JSON.stringify(await response.json(), null, 4);
+
+                  if(this.data!="1"){
+                    break;
+                  }
+
+                  this.data = "Request number" + counter + this.data;
+
+                  counter++;  
+                }
+
+              }
+              this.data = "API made " + counter + " requests before throttler kicked in."
             }
 
         }
