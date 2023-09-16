@@ -31,7 +31,7 @@ describe('XTransferService', () => {
     service = module.get<XTransferService>(XTransferService);
     createApiInstanceSpy = jest
       .spyOn(utils, 'createApiInstance')
-      .mockResolvedValue({} as any);
+      .mockResolvedValue(null as any);
     findWsUrlByNodeSpy = jest.spyOn(utils, 'findWsUrlByNode');
     getNodeRelayChainWsUrlSpy = jest.spyOn(utils, 'getNodeRelayChainWsUrl');
   });
