@@ -71,6 +71,8 @@ export class XTransferService {
         throw new BadRequestException(e.message);
       }
       throw new InternalServerErrorException(e.message);
+    } finally {
+      if (api) api.disconnect();
     }
     return response;
   }
