@@ -31,7 +31,7 @@
     "@nestjs/serve-static": "^4.0.0",
     "@nestjs/throttler": "4.2.0",
     "@nestjs/typeorm": "^10.0.0",
-    "@paraspell/sdk": "^2.0.5",
+    "@paraspell/sdk": "^2.0.6",
     "@polkadot/api": "^10.9.1",
     "@polkadot/api-base": "^10.9.1",
     "@polkadot/apps-config": "^0.124.1",

@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@nestjs/common':
     specifier: ^10.0.0
@@ -29,8 +33,8 @@ dependencies:
     specifier: ^10.0.0
     version: 10.0.0(@nestjs/common@10.0.0)(@nestjs/core@10.0.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)(typeorm@0.3.17)
   '@paraspell/sdk':
-    specifier: ^2.0.5
-    version: 2.0.5(@polkadot/api-base@10.9.1)(@polkadot/api@10.9.1)(@polkadot/apps-config@0.124.1)(@polkadot/types@10.9.1)
+    specifier: ^2.0.6
+    version: 2.0.6(@polkadot/api-base@10.9.1)(@polkadot/api@10.9.1)(@polkadot/apps-config@0.124.1)(@polkadot/types@10.9.1)
   '@polkadot/api':
     specifier: ^10.9.1
     version: 10.9.1
@@ -1638,8 +1642,8 @@ packages:
       '@open-web3/orml-type-definitions': 1.1.4
     dev: false
 
-  /@paraspell/sdk@2.0.5(@polkadot/api-base@10.9.1)(@polkadot/api@10.9.1)(@polkadot/apps-config@0.124.1)(@polkadot/types@10.9.1):
-    resolution: {integrity: sha512-OBe4A5fTFMlNz9zkr/WqWlEloFF92PWQmJvJvbjKemfPOGkXlsGRNZjNR5sNy+zdxEboUKSQdgFRdV8OLz2tqg==}
+  /@paraspell/sdk@2.0.6(@polkadot/api-base@10.9.1)(@polkadot/api@10.9.1)(@polkadot/apps-config@0.124.1)(@polkadot/types@10.9.1):
+    resolution: {integrity: sha512-7YdrftoVqX7bsORScqG7QbsUd8fAwvU11GpNowlaLaBeC36Wq4MZTDs0d2B0zgPGDn4L/ql8TeY6wgnFASiitw==}
     peerDependencies:
       '@polkadot/api': ^10.6.1
       '@polkadot/api-base': ^10.6.1
@@ -3142,6 +3146,7 @@ packages:
 
   /@substrate/smoldot-light@0.7.9:
     resolution: {integrity: sha512-HP8iP7sFYlpSgjjbo0lqHyU+gu9lL2hbDNce6dWk5/10mFFF9jKIFGfui4zCecUY808o/Go9pan/31kMJoLbug==}
+    requiresBuild: true
     dependencies:
       pako: 2.1.0
       ws: 8.13.0
@@ -7335,6 +7340,7 @@ packages:
 
   /smoldot@1.0.4:
     resolution: {integrity: sha512-N3TazI1C4GGrseFH/piWyZCCCRJTRx2QhDfrUKRT4SzILlW5m8ayZ3QTKICcz1C/536T9cbHHJyP7afxI6Mi1A==}
+    requiresBuild: true
     dependencies:
       pako: 2.1.0
       ws: 8.13.0
