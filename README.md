@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">
-XCM-API (Supporting 44 Parachains)
+XCM-API (Supporting 43 Parachains)
 </h1>
 
 <p align="center">
@@ -34,7 +34,7 @@ Enhance the cross-chain experience of your Polkadot/Kusama decentralized applica
 API is now deployed on the live server and accessible on the following link: https://api.lightspell.xyz/
 
 ## Introduction
-Our team focuses on the unification of cross-chain communication in the Polkadot and Kusama ecosystems for a while now. Our latest and flagship addition is XCM API also known as LightSpell⚡️. This tool allows you to implement cross-chain interoperability into your application within moments.
+Our team has focused on the unification of cross-chain communication in the Polkadot and Kusama ecosystems for a while now. Our latest and flagship addition is XCM API also known as LightSpell⚡️. This tool allows you to implement cross-chain interoperability into your application within moments.
 
 **Reasons to use XCM API for interoperability integration into your application:**
 - XCM API handles complex logic and you are only required to provide basic details to create calls (Junctions and other complex details are auto-filled for you)
@@ -112,7 +112,7 @@ Possible parameters:
 //Retrieve assets object for a specific Parachain
 const response = await fetch("http://localhost:3001/assets/:node");
 
-//Retrieve asset id for particular Parachain and asset
+//Retrieve asset ID for particular Parachain and asset
 const response = await fetch("http://localhost:3001/assets/:node/id?symbol=:asset");
 
 //Retrieve the Relay chain asset Symbol for a particular Parachain
@@ -133,7 +133,7 @@ const response = await fetch("http://localhost:3001/assets/:node/has-support?sym
 //Retrieve decimals for a particular asset for a particular Parachain
 const response = await fetch("http://localhost:3001/assets/:node/decimals?symbol=:asset");
 
-//Retrieve Parachain id for a particular Parachain
+//Retrieve Parachain ID for a particular Parachain
 const response = await fetch("http://localhost:3001/assets/:node/para-id");
 
 //Retrieve Parachain name from Parachain ID
@@ -217,10 +217,10 @@ $ pnpm run start:prod
 ```
 
 ## Upgrading request per minute count
-For guidance on this topic head to following [documentation section](https://paraspell.github.io/docs/api/upgrade.html).
+For guidance on this topic head to the following [documentation section](https://paraspell.github.io/docs/api/upgrade.html).
 
 ## Deploying API yourself
-For guidance on this topic head to following [documentation section](https://paraspell.github.io/docs/api/deploy.html).
+For guidance on this topic head to the following [documentation section](https://paraspell.github.io/docs/api/deploy.html).
 
 ## Tests
 The following section contains various test types (unit, e2e, integration, coverage) and a test playground that allows you to fully test API capabilities.
