@@ -9,7 +9,10 @@ import {
   getRelayChainSymbol,
 } from '@paraspell/sdk';
 import { ApiPromise, WsProvider } from '@polkadot/api';
+import { decodeAddress, encodeAddress } from '@polkadot/keyring';
+import { hexToU8a, isHex } from '@polkadot/util';
 import axios from 'axios';
+import { isAddress } from 'web3-validator';
 
 export const isNumeric = (num: any) => !isNaN(num);
 
@@ -73,3 +76,17 @@ export const validateRecaptcha = async (
 
   return response.data.success;
 };
+
+export const isValidPolkadotAddress = (address: string) => {
+  try {
+    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const isValidEthereumAddress = (address: string) => isAddress(address);
+
+export const isValidWalletAddress = (address: string) =>
+  isValidPolkadotAddress(address) || isValidEthereumAddress(address);

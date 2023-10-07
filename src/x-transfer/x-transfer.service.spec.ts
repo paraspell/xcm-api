@@ -16,7 +16,7 @@ describe('XTransferService', () => {
   let getNodeRelayChainWsUrlSpy: jest.SpyInstance;
 
   const amount = 100;
-  const address = '0x123';
+  const address = '5F5586mfsnM6durWRLptYt3jSUs55KEmahdodQ5tQMr9iY96';
   const currency = 'DOT';
   const wsUrl = 'wss://example.com';
   const relayChainWsUrl = 'wss://relaychain.com';
