@@ -34,7 +34,7 @@ describe('XTransferController', () => {
         from: 'Acala',
         to: 'Basilisk',
         amount: 100,
-        address: '0x123456789',
+        address: '5F5586mfsnM6durWRLptYt3jSUs55KEmahdodQ5tQMr9iY96',
         currency: 'DOT',
       };
       const mockResult = 'serialized-api-call';

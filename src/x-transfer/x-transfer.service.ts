@@ -12,7 +12,11 @@ import {
   TSerializedApiCall,
 } from '@paraspell/sdk';
 import { XTransferDto } from './dto/XTransferDto';
-import { createApiInstance, determineWsUrl } from '../utils';
+import {
+  createApiInstance,
+  determineWsUrl,
+  isValidWalletAddress,
+} from '../utils';
 
 @Injectable()
 export class XTransferService {
@@ -37,6 +41,10 @@ export class XTransferService {
 
     if (from && to && !currency) {
       throw new BadRequestException(`Currency should not be empty.`);
+    }
+
+    if (!isValidWalletAddress(address)) {
+      throw new BadRequestException('Invalid wallet address.');
     }
 
     const wsUrl = determineWsUrl(from as TNode, to as TNode);
