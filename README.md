@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">
-XCM-API (Supporting 43 Parachains)
+XCM-API (Supporting 48 Parachains)
 </h1>
 
 <p align="center">
