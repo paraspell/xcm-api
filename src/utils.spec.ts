@@ -1,17 +1,7 @@
-import {
-  BadRequestException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { ApiPromise } from '@polkadot/api';
-import {
-  isNumeric,
-  createApiInstance,
-  findWsUrlByNode,
-  validateNode,
-  getNodeRelayChainWsUrl,
-} from './utils';
+import { isNumeric, validateNode } from './utils';
 import * as paraspellSdk from '@paraspell/sdk';
-import { TNode } from '@paraspell/sdk';
 
 jest.mock('@polkadot/api', () => {
   const originalModule = jest.requireActual('@polkadot/api');
@@ -53,8 +43,6 @@ describe('isNumeric', () => {
 
 describe('createApiInstance', () => {
   it('should create an ApiPromise instance', async () => {
-    const wsUrl = 'wss://rpc.polkadot.io';
-
     // Cast ApiPromise.create to a jest.Mock to use mockResolvedValue
     (ApiPromise.create as jest.Mock).mockResolvedValue({
       wsProvider: {
@@ -63,7 +51,7 @@ describe('createApiInstance', () => {
       },
     });
 
-    const result = await createApiInstance(wsUrl);
+    const result = await paraspellSdk.createApiInstanceForNode('Polkadot');
 
     expect(ApiPromise.create).toHaveBeenCalledWith({
       provider: expect.any(Object),
@@ -74,34 +62,6 @@ describe('createApiInstance', () => {
   });
 });
 
-describe('findWsUrlByNode', () => {
-  it('should return the first provider WS URL for a valid node', () => {
-    const node: TNode = 'Acala';
-    const nodeInfo = {
-      providers: { provider1: 'wss://provider1', provider2: 'wss://provider2' },
-    };
-    const getNodeEndpointOptionSpy = jest
-      .spyOn(paraspellSdk, 'getNodeEndpointOption')
-      .mockReturnValue(nodeInfo as any);
-
-    const result = findWsUrlByNode(node);
-
-    expect(getNodeEndpointOptionSpy).toHaveBeenCalledWith(node);
-    expect(result).toBe('wss://provider1');
-  });
-
-  it('should throw InternalServerErrorException for node with no providers', () => {
-    const node: TNode = 'Acala';
-    const nodeInfo = { providers: {} };
-    const getNodeEndpointOptionSpy = jest
-      .spyOn(paraspellSdk, 'getNodeEndpointOption')
-      .mockReturnValue(nodeInfo as any);
-
-    expect(() => findWsUrlByNode(node)).toThrow(InternalServerErrorException);
-    expect(getNodeEndpointOptionSpy).toHaveBeenCalledWith(node);
-  });
-});
-
 describe('validateNode', () => {
   it('should not throw for valid node', () => {
     expect(() => validateNode('Acala')).not.toThrow();
@@ -109,31 +69,5 @@ describe('validateNode', () => {
 
   it('should throw BadRequestException for invalid node', () => {
     expect(() => validateNode('InvalidNode')).toThrow(BadRequestException);
-  });
-});
-
-describe('getNodeRelayChainWsUrl', () => {
-  it('should return POLKADOT_WS for DOT', () => {
-    const symbol = 'DOT';
-    const getRelayChainSymbolSpy = jest
-      .spyOn(paraspellSdk, 'getRelayChainSymbol')
-      .mockReturnValue(symbol);
-
-    const result = getNodeRelayChainWsUrl('Acala');
-
-    expect(getRelayChainSymbolSpy).toHaveBeenCalledWith('Acala');
-    expect(result).toBe('wss://kusama-rpc.polkadot.io');
-  });
-
-  it('should return KUSAMA_WS for non-DOT symbol', () => {
-    const symbol = 'KSM';
-    const getRelayChainSymbolSpy = jest
-      .spyOn(paraspellSdk, 'getRelayChainSymbol')
-      .mockReturnValue(symbol);
-
-    const result = getNodeRelayChainWsUrl('Acala');
-
-    expect(getRelayChainSymbolSpy).toHaveBeenCalledWith('Acala');
-    expect(result).toBe('wss://rpc.polkadot.io');
   });
 });

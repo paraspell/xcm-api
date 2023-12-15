@@ -3,7 +3,6 @@ import { XTransferService } from './x-transfer.service';
 import * as paraspellSdk from '@paraspell/sdk';
 import { TNode, InvalidCurrencyError } from '@paraspell/sdk';
 import { XTransferDto } from './dto/XTransferDto';
-import * as utils from 'src/utils';
 import {
   BadRequestException,
   InternalServerErrorException,
@@ -11,15 +10,11 @@ import {
 
 describe('XTransferService', () => {
   let service: XTransferService;
-  let createApiInstanceSpy: jest.SpyInstance;
-  let findWsUrlByNodeSpy: jest.SpyInstance;
-  let getNodeRelayChainWsUrlSpy: jest.SpyInstance;
+  let createApiInstanceForNodeSpy: jest.SpyInstance;
 
   const amount = 100;
   const address = '5F5586mfsnM6durWRLptYt3jSUs55KEmahdodQ5tQMr9iY96';
   const currency = 'DOT';
-  const wsUrl = 'wss://example.com';
-  const relayChainWsUrl = 'wss://relaychain.com';
   const serializedApiCall = 'serialized-api-call';
   const invalidNode = 'InvalidNode';
 
@@ -29,16 +24,13 @@ describe('XTransferService', () => {
     }).compile();
 
     service = module.get<XTransferService>(XTransferService);
-    createApiInstanceSpy = jest
-      .spyOn(utils, 'createApiInstance')
+    createApiInstanceForNodeSpy = jest
+      .spyOn(paraspellSdk, 'createApiInstanceForNode')
       .mockResolvedValue(null as any);
-    findWsUrlByNodeSpy = jest.spyOn(utils, 'findWsUrlByNode');
-    getNodeRelayChainWsUrlSpy = jest.spyOn(utils, 'getNodeRelayChainWsUrl');
   });
 
   afterEach(() => {
-    createApiInstanceSpy.mockRestore();
-    findWsUrlByNodeSpy.mockRestore();
+    createApiInstanceForNodeSpy.mockRestore();
   });
 
   it('should be defined', () => {
@@ -56,7 +48,6 @@ describe('XTransferService', () => {
         address,
         currency,
       };
-      findWsUrlByNodeSpy.mockReturnValue(wsUrl);
 
       const builderMock = {
         from: jest.fn().mockReturnThis(),
@@ -71,8 +62,7 @@ describe('XTransferService', () => {
       const result = await service.generateXcmCall(xTransferDto);
 
       expect(result).toBe(serializedApiCall);
-      expect(createApiInstanceSpy).toHaveBeenCalledWith(wsUrl);
-      expect(findWsUrlByNodeSpy).toHaveBeenCalled();
+      expect(createApiInstanceForNodeSpy).toHaveBeenCalledWith(from);
       expect(builderMock.from).toHaveBeenCalledWith(from);
       expect(builderMock.to).toHaveBeenCalledWith(to);
       expect(builderMock.currency).toHaveBeenCalledWith(currency);
@@ -90,7 +80,6 @@ describe('XTransferService', () => {
         address,
         currency,
       };
-      findWsUrlByNodeSpy.mockReturnValue(wsUrl);
 
       const builderMock = {
         from: jest.fn().mockReturnThis(),
@@ -103,8 +92,7 @@ describe('XTransferService', () => {
       const result = await service.generateXcmCall(xTransferDto);
 
       expect(result).toBe(serializedApiCall);
-      expect(createApiInstanceSpy).toHaveBeenCalledWith(wsUrl);
-      expect(findWsUrlByNodeSpy).toHaveBeenCalledWith(from);
+      expect(createApiInstanceForNodeSpy).toHaveBeenCalledWith(from);
       expect(builderMock.from).toHaveBeenCalledWith(from);
       expect(builderMock.amount).toHaveBeenCalledWith(amount);
       expect(builderMock.address).toHaveBeenCalledWith(address);
@@ -118,8 +106,6 @@ describe('XTransferService', () => {
         amount,
         address,
       };
-      findWsUrlByNodeSpy.mockReturnValue(wsUrl);
-      getNodeRelayChainWsUrlSpy.mockReturnValue(relayChainWsUrl);
 
       const builderMock = {
         to: jest.fn().mockReturnThis(),
@@ -132,9 +118,7 @@ describe('XTransferService', () => {
       const result = await service.generateXcmCall(xTransferDto);
 
       expect(result).toBe(serializedApiCall);
-      expect(createApiInstanceSpy).toHaveBeenCalledWith(relayChainWsUrl);
-      expect(findWsUrlByNodeSpy).not.toHaveBeenCalled();
-      expect(getNodeRelayChainWsUrlSpy).toHaveBeenCalledWith(to);
+      expect(createApiInstanceForNodeSpy).toHaveBeenCalledWith(to);
       expect(builderMock.to).toHaveBeenCalledWith(to);
       expect(builderMock.amount).toHaveBeenCalledWith(amount);
       expect(builderMock.address).toHaveBeenCalledWith(address);
@@ -152,8 +136,7 @@ describe('XTransferService', () => {
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(createApiInstanceSpy).not.toHaveBeenCalled();
-      expect(findWsUrlByNodeSpy).not.toHaveBeenCalled();
+      expect(createApiInstanceForNodeSpy).not.toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for invalid to node', async () => {
@@ -167,8 +150,7 @@ describe('XTransferService', () => {
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(createApiInstanceSpy).not.toHaveBeenCalled();
-      expect(findWsUrlByNodeSpy).not.toHaveBeenCalled();
+      expect(createApiInstanceForNodeSpy).not.toHaveBeenCalled();
     });
 
     it('should throw BadRequestException when from and to node are missing', async () => {
@@ -181,8 +163,7 @@ describe('XTransferService', () => {
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(createApiInstanceSpy).not.toHaveBeenCalled();
-      expect(findWsUrlByNodeSpy).not.toHaveBeenCalled();
+      expect(createApiInstanceForNodeSpy).not.toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for missing currency in parachain to parachain transfer', async () => {
@@ -196,8 +177,7 @@ describe('XTransferService', () => {
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(createApiInstanceSpy).not.toHaveBeenCalled();
-      expect(findWsUrlByNodeSpy).not.toHaveBeenCalled();
+      expect(createApiInstanceForNodeSpy).not.toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for invalid currency', async () => {
@@ -224,8 +204,7 @@ describe('XTransferService', () => {
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(createApiInstanceSpy).toHaveBeenCalled();
-      expect(findWsUrlByNodeSpy).toHaveBeenCalled();
+      expect(createApiInstanceForNodeSpy).toHaveBeenCalled();
     });
 
     it('should throw InternalServerError when uknown error occures in the SDK', async () => {
@@ -252,8 +231,7 @@ describe('XTransferService', () => {
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         InternalServerErrorException,
       );
-      expect(createApiInstanceSpy).toHaveBeenCalled();
-      expect(findWsUrlByNodeSpy).toHaveBeenCalled();
+      expect(createApiInstanceForNodeSpy).toHaveBeenCalled();
     });
   });
 });

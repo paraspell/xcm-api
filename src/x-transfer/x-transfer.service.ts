@@ -10,36 +10,36 @@ import {
   NODE_NAMES,
   TNode,
   TSerializedApiCall,
+  createApiInstanceForNode,
 } from '@paraspell/sdk';
 import { XTransferDto } from './dto/XTransferDto';
-import {
-  createApiInstance,
-  determineWsUrl,
-  isValidWalletAddress,
-} from '../utils';
+import { isValidWalletAddress } from '../utils';
 
 @Injectable()
 export class XTransferService {
   async generateXcmCall({ from, to, amount, address, currency }: XTransferDto) {
-    if (!from && !to) {
+    const fromNode = from as TNode | undefined;
+    const toNode = to as TNode | undefined;
+
+    if (!fromNode && !toNode) {
       throw new BadRequestException(
         "You need to provide either 'from' or 'to' query parameters",
       );
     }
 
-    if (from && !NODE_NAMES.includes(from as TNode)) {
+    if (fromNode && !NODE_NAMES.includes(fromNode)) {
       throw new BadRequestException(
         `Node ${from} is not valid. Check docs for valid nodes.`,
       );
     }
 
-    if (to && !NODE_NAMES.includes(to as TNode)) {
+    if (toNode && !NODE_NAMES.includes(toNode)) {
       throw new BadRequestException(
         `Node ${to} is not valid. Check docs for valid nodes.`,
       );
     }
 
-    if (from && to && !currency) {
+    if (fromNode && toNode && !currency) {
       throw new BadRequestException(`Currency should not be empty.`);
     }
 
@@ -47,23 +47,19 @@ export class XTransferService {
       throw new BadRequestException('Invalid wallet address.');
     }
 
-    const wsUrl = determineWsUrl(from as TNode, to as TNode);
-    const api = await createApiInstance(wsUrl);
+    const api = await createApiInstanceForNode(fromNode ?? toNode);
 
     let builder: any = Builder(api);
 
-    if (from && to) {
+    if (fromNode && toNode) {
       // Parachain to parachain
-      builder = builder
-        .from(from as TNode)
-        .to(to as TNode)
-        .currency(currency);
+      builder = builder.from(fromNode).to(toNode).currency(currency);
     } else if (from) {
       // Parachain to relaychain
-      builder = builder.from(from as TNode);
+      builder = builder.from(fromNode);
     } else if (to) {
       // Relaychain to parachain
-      builder = builder.to(to as TNode);
+      builder = builder.to(toNode);
     }
 
     builder = builder.amount(amount).address(address);
