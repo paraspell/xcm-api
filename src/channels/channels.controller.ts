@@ -1,9 +1,9 @@
 import { Controller, Post, Delete, Query, Req } from '@nestjs/common';
-import { ChannelsService } from './channels.service';
-import { OpenChannelDto } from './dto/open-channel.dto';
-import { CloseChannelDto } from './dto/close-channel.dto';
-import { AnalyticsService } from '../analytics/analytics.service';
-import { EventName } from '../analytics/EventName';
+import { ChannelsService } from './channels.service.js';
+import { OpenChannelDto } from './dto/open-channel.dto.js';
+import { CloseChannelDto } from './dto/close-channel.dto.js';
+import { AnalyticsService } from '../analytics/analytics.service.js';
+import { EventName } from '../analytics/EventName.js';
 
 @Controller('hrmp/channels')
 export class ChannelsController {

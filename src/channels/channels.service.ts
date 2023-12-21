@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { OpenChannelDto } from './dto/open-channel.dto';
-import { CloseChannelDto } from './dto/close-channel.dto';
+import { OpenChannelDto } from './dto/open-channel.dto.js';
+import { CloseChannelDto } from './dto/close-channel.dto.js';
 import { Builder, NODE_NAMES, TNode } from '@paraspell/sdk';
 
 @Injectable()

@@ -1,0 +1,13 @@
+diff --git a/package.json b/package.json
+index 58c77ac341615f30436ce0b4a361f7f1cd325ccf..ddb1af2b1272b6ec444cb3041c25b33e1e93a0d6 100644
+--- a/package.json
++++ b/package.json
+@@ -20,7 +20,7 @@
+   "files": [
+     "build"
+   ],
+-  "main": "./build/index.cjs",
++  "main": "./build/index.mjs",
+   "module": "./build/index.mjs",
+   "types": "./build/types/index.d.ts",
+   "scripts": {

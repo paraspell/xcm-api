@@ -1,9 +1,9 @@
 import { Controller, Get, Param, Query, Req } from '@nestjs/common';
-import { AssetsService } from './assets.service';
-import { isNumeric } from '../utils';
-import { SymbolDto } from './dto/SymbolDto';
-import { AnalyticsService } from '../analytics/analytics.service';
-import { EventName } from '../analytics/EventName';
+import { AssetsService } from './assets.service.js';
+import { isNumeric } from '../utils.js';
+import { SymbolDto } from './dto/SymbolDto.js';
+import { AnalyticsService } from '../analytics/analytics.service.js';
+import { EventName } from '../analytics/EventName.js';
 
 @Controller('assets')
 export class AssetsController {

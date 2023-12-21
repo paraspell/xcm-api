@@ -12,8 +12,8 @@ import {
   TSerializedApiCall,
   createApiInstanceForNode,
 } from '@paraspell/sdk';
-import { XTransferDto } from './dto/XTransferDto';
-import { isValidWalletAddress } from '../utils';
+import { XTransferDto } from './dto/XTransferDto.js';
+import { isValidWalletAddress } from '../utils.js';
 
 @Injectable()
 export class XTransferService {

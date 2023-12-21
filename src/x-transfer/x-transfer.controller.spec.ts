@@ -1,10 +1,10 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { XTransferController } from './x-transfer.controller';
-import { XTransferService } from './x-transfer.service';
-import { XTransferDto } from './dto/XTransferDto';
-import { mockRequestObject } from 'src/testUtils';
-import { AnalyticsService } from 'src/analytics/analytics.service';
-import { createMock } from '@golevelup/ts-jest';
+import { XTransferController } from './x-transfer.controller.js';
+import { XTransferService } from './x-transfer.service.js';
+import { XTransferDto } from './dto/XTransferDto.js';
+import { mockRequestObject } from '../testUtils.js';
+import { AnalyticsService } from '../analytics/analytics.service.js';
 
 // Integration tests to ensure controller and service are working together
 describe('XTransferController', () => {
@@ -16,7 +16,10 @@ describe('XTransferController', () => {
       controllers: [XTransferController],
       providers: [
         XTransferService,
-        { provide: AnalyticsService, useValue: createMock<AnalyticsService>() },
+        {
+          provide: AnalyticsService,
+          useValue: { get: () => '', track: vi.fn() },
+        },
       ],
     }).compile();
 
@@ -38,9 +41,7 @@ describe('XTransferController', () => {
         currency: 'DOT',
       };
       const mockResult = 'serialized-api-call';
-      jest
-        .spyOn(service, 'generateXcmCall' as any)
-        .mockResolvedValue(mockResult);
+      vi.spyOn(service, 'generateXcmCall' as any).mockResolvedValue(mockResult);
 
       const result = await controller.generateXcmCall(
         queryParams,

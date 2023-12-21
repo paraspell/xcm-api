@@ -1,8 +1,26 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ChannelsService } from './channels.service';
+import { ChannelsService } from './channels.service.js';
 import { BadRequestException } from '@nestjs/common';
 import * as paraspellSdk from '@paraspell/sdk';
 import { TNode } from '@paraspell/sdk';
+
+const builderMock = {
+  from: vi.fn().mockReturnThis(),
+  to: vi.fn().mockReturnThis(),
+  openChannel: vi.fn().mockReturnThis(),
+  maxSize: vi.fn().mockReturnThis(),
+  maxMessageSize: vi.fn().mockReturnThis(),
+  buildSerializedApiCall: vi.fn().mockReturnValue('serialized-api-call'),
+};
+
+vi.mock('@paraspell/sdk', async () => {
+  const actual = await vi.importActual('@paraspell/sdk');
+  return {
+    ...actual,
+    Builder: vi.fn().mockImplementation(() => builderMock),
+  };
+});
 
 describe('ChannelsService', () => {
   let service: ChannelsService;
@@ -35,29 +53,16 @@ describe('ChannelsService', () => {
         maxMessageSize,
       };
 
-      // Mock the relevant builder interfaces
-      const mockBuilder = {
-        from: jest.fn().mockReturnThis(),
-        to: jest.fn().mockReturnThis(),
-        openChannel: jest.fn().mockReturnThis(),
-        maxSize: jest.fn().mockReturnThis(),
-        maxMessageSize: jest.fn().mockReturnThis(),
-        buildSerializedApiCall: jest
-          .fn()
-          .mockReturnValue('serialized-api-call'),
-      };
-      const builderSpy = jest
-        .spyOn(paraspellSdk, 'Builder')
-        .mockReturnValue(mockBuilder as any);
+      const builderSpy = vi.spyOn(paraspellSdk, 'Builder');
 
       const result = await service.openChannel(mockOpenChannelDto);
 
       expect(result).toBe('serialized-api-call');
-      expect(builderSpy).toHaveBeenCalledWith(null); // Check if Builder is called with the expected parameter
-      expect(mockBuilder.from).toHaveBeenCalledWith(from);
-      expect(mockBuilder.to).toHaveBeenCalledWith(to);
-      expect(mockBuilder.maxSize).toHaveBeenCalledWith(Number(maxSize));
-      expect(mockBuilder.maxMessageSize).toHaveBeenCalledWith(
+      expect(builderSpy).toHaveBeenCalledWith(null);
+      expect(builderMock.from).toHaveBeenCalledWith(from);
+      expect(builderMock.to).toHaveBeenCalledWith(to);
+      expect(builderMock.maxSize).toHaveBeenCalledWith(Number(maxSize));
+      expect(builderMock.maxMessageSize).toHaveBeenCalledWith(
         Number(maxMessageSize),
       );
     });
@@ -103,27 +108,28 @@ describe('ChannelsService', () => {
         outbound,
       };
 
-      const mockBuilder = {
-        from: jest.fn().mockReturnThis(),
-        inbound: jest.fn().mockReturnThis(),
-        outbound: jest.fn().mockReturnThis(),
-        closeChannel: jest.fn().mockReturnThis(),
-        buildSerializedApiCall: jest
-          .fn()
-          .mockReturnValue('serialized-api-call'),
+      // Redefine builderMock for this test
+      const builderMock = {
+        from: vi.fn().mockReturnThis(),
+        closeChannel: vi.fn().mockReturnThis(),
+        inbound: vi.fn().mockReturnThis(),
+        outbound: vi.fn().mockReturnThis(),
+        buildSerializedApiCall: vi.fn().mockReturnValue('serialized-api-call'),
       };
 
-      const builderSpy = jest
+      // Mock Builder with the new mock object
+      const builderSpy = vi
         .spyOn(paraspellSdk, 'Builder')
-        .mockReturnValue(mockBuilder as any);
+        .mockImplementation(() => builderMock as any);
 
       const result = await service.closeChannel(mockCloseChannelDto);
 
       expect(result).toBe('serialized-api-call');
       expect(builderSpy).toHaveBeenCalledWith(null);
-      expect(mockBuilder.from).toHaveBeenCalledWith(from);
-      expect(mockBuilder.inbound).toHaveBeenCalledWith(Number(inbound));
-      expect(mockBuilder.outbound).toHaveBeenCalledWith(Number(outbound));
+      expect(builderMock.from).toHaveBeenCalledWith(from);
+      expect(builderMock.inbound).toHaveBeenCalledWith(Number(inbound));
+      expect(builderMock.outbound).toHaveBeenCalledWith(Number(outbound));
+      expect(builderMock.buildSerializedApiCall).toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for invalid nodes', async () => {

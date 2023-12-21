@@ -1,0 +1,13 @@
+diff --git a/node_modules/@interlay/interbtc-api/build/esm/src/parachain/amm.js b/node_modules/@interlay/interbtc-api/build/esm/src/parachain/amm.js
+index 866a447..24c889d 100644
+--- a/node_modules/@interlay/interbtc-api/build/esm/src/parachain/amm.js
++++ b/node_modules/@interlay/interbtc-api/build/esm/src/parachain/amm.js
+@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
+ import { MonetaryAmount } from "@interlay/monetary-js";
+ import { addressOrPairAsAccountId, calculateAnnualizedRewardAmount, currencyIdToMonetaryCurrency, decodeBytesAsString, decodeFixedPointType, getStandardLpTokenFromCurrencyId, isCurrencyEqual, isStableLpToken, monetaryAmountToRawString, newCurrencyId, newMonetaryAmount, storageKeyToNthInner, } from "../utils";
+ import Big from "big.js";
+-import { getAllTradingPairs, findBestTradeRecursively, StandardLiquidityPool, StableLiquidityPool, PoolType, encodeSwapParamsForStandardPoolsOnly, encodeSwapParamsForStandardAndStablePools, isStableMultiPathElement, isStableMetaPool, isStandardPool, StableLiquidityMetaPool, } from "./amm/";
++import { getAllTradingPairs, findBestTradeRecursively, StandardLiquidityPool, StableLiquidityPool, PoolType, encodeSwapParamsForStandardPoolsOnly, encodeSwapParamsForStandardAndStablePools, isStableMultiPathElement, isStableMetaPool, isStandardPool, StableLiquidityMetaPool, } from "./amm/index";
+ const HOP_LIMIT = 4;
+ const FEE_MULTIPLIER_STANDARD = 10000;
+ const FEE_MULTIPLIER_STABLE = 10000000000;
