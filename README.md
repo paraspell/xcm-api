@@ -18,9 +18,10 @@ Enhance the cross-chain experience of your Polkadot/Kusama decentralized applica
 [2. Problem statement](#problem-statement)<br />
 [3. Usage guide](#usage-guide)<br />
 &nbsp;&nbsp;[3.1 XCM Messages](#xcm-messages)<br />
-&nbsp;&nbsp;[3.2 Asset Pallet](#asset-pallet)<br />
-&nbsp;&nbsp;[3.3 XCM Pallet](#xcm-pallet)<br />
-&nbsp;&nbsp;[3.4 HRMP Pallet](#hrmp-pallet)<br />
+&nbsp;&nbsp;[3.2 XCM Router](#xcm-router)<br />
+&nbsp;&nbsp;[3.3 Asset Pallet](#asset-pallet)<br />
+&nbsp;&nbsp;[3.4 XCM Pallet](#xcm-pallet)<br />
+&nbsp;&nbsp;[3.5 HRMP Pallet](#hrmp-pallet)<br />
 [4. Running the API locally](#running-the-api-locally)<br />
 &nbsp;&nbsp;[4.1 Installation](#installation)<br />
 &nbsp;&nbsp;[4.2 Start nest server](#start-nest-server)<br />
@@ -96,6 +97,39 @@ const response = await fetch(
         currency: "Currency", //Replace "Currency" with asset id or symbol eg. "DOT"
         amount: "Amount",  //Replace "Amount" with the amount you wish to transfer (Numeric value)
         address: "Address" //Replace "Address" with destination wallet address (In AccountID32 or AccountKey20 Format)
+    })
+);
+```
+
+### XCM Router
+A complete guide on this section can be found in [official docs](https://paraspell.github.io/docs/api/xcmRouter.html).
+
+NOTICE: It is advised to use at least 120s timeout with this endpoint (Because API has to connect to other endpoints and that is time dependent)
+
+Possible parameters:
+- `from` (Query parameter): (required): Represents the Parachain from which the assets will be transferred.
+- `exchange` (Query parameter): (optional): Represents the Parachain DEX on which tokens will be exchanged (If not provided, DEX is selected automatically based on best price output).
+- `to` (Query parameter): (required): Represents the Parachain to which the assets will be transferred.
+- `currencyFrom` (Query parameter): (required): Represents the asset being sent.
+- `currencyTo` (Query parameter): (required): Represents the asset being received. 
+- `amount` (Query parameter): (required): Specifies the amount of assets to transfer.
+- `slippagePct` (Query parameter): (required): Specifies the slippage percentage. 
+- `address` (Query parameter): (required): Specifies the address of the recipient.
+- `injectorAddress` (Query parameter): (required): Specifies the address of the sender.
+
+```js
+const response = await fetch(
+    "http://localhost:3001/router?" +
+    new URLSearchParams({
+        from: "Polkadot", //Origin Parachain/Relay chain
+        exchange: "AcalaDex", //Exchange Parachain/Relay chain
+        to: "Interlay", //Destination Parachain/Relay chain
+        currencyFrom: "DOT", // Currency to send
+        currencyTo: "INTR", // Currency to receive
+        amount: "100000", // Amount to send
+        slippagePct: "1", // Max slipppage percentage
+        address: "5F5586mfsnM6durWRLptYt3jSUs55KEmahdodQ5tQMr9iY96", //Recipient address
+        injectorAddress: '5F5586mfsnM6durWRLptYt3jSUs55KEmahdodQ5tQMr9iY96', //Address of sender
     })
 );
 ```
@@ -199,21 +233,23 @@ const response = await fetch(
 ### Installation
 The following command installs all necessary packages.
 
+NOTICE: Use Yarn v1.22 (Temporarily)
+
 ```bash
-$ pnpm install
+$ yarn
 ```
 
 ### Start nest server
 The following commands allow you to start the nest server locally. You can then test its endpoints with various tools (eg. [Insomnia](https://insomnia.rest/)) or integrate it directly into your application.
 ```bash
 # development
-$ pnpm run start
+$ yarn start
 
 # watch mode
-$ pnpm run start:dev
+$ yarn start:dev
 
 # production mode
-$ pnpm run start:prod
+$ yarn start:prod
 ```
 
 ## Upgrading request per minute count
@@ -225,7 +261,7 @@ For guidance on this topic head to the following [documentation section](https:/
 ## Tests
 The following section contains various test types (unit, e2e, integration, coverage) and a test playground that allows you to fully test API capabilities.
 
-### API playground
+### API playground (For Router endpoint testing use [XCM Router Playground](https://github.com/paraspell/xcm-router/tree/main/playground))
 ```bash
 # Navigate to the playground folder
 $ cd playground
@@ -241,16 +277,16 @@ $ pnpm run start
 ```
 
 ### API tests
-These tests will be implemented soon. Try using Playground for now.
+Following commands allow you to run various tests on the API.
 
 ```bash
 # unit & integration tests
-$ pnpm run test
+$ yarn test
 
 # e2e tests
-$ pnpm run test:e2e
+$ yarn test:e2e
 
 # test coverage
-$ pnpm run test:cov
+$ yarn test:cov
 ```
 
