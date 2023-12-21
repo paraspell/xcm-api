@@ -28,7 +28,7 @@ Enhance the cross-chain experience of your Polkadot/Kusama decentralized applica
 [5. Upgrading request per minute count](#upgrading-request-per-minute-count)<br />
 [6. Deploying API yourself](#deploying-api-yourself)<br />
 [7. Tests](#tests)<br />
-&nbsp;&nbsp;[7.1 API playground](#api-playground)<br />
+&nbsp;&nbsp;[7.1 API playground](#api-playground-for-router-endpoint-testing-use-xcm-router-playground)<br />
 &nbsp;&nbsp;[7.2 API tests](#api-tests)<br />
 
 ## Live status
