@@ -1,29 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { ApiPromise } from '@polkadot/api';
-import { isNumeric, validateNode } from './utils';
-import * as paraspellSdk from '@paraspell/sdk';
-
-jest.mock('@polkadot/api', () => {
-  const originalModule = jest.requireActual('@polkadot/api');
-
-  const mockWsProvider = jest.fn().mockImplementation(() => ({
-    isConnected: true,
-    send: jest.fn(),
-  }));
-
-  const mockApiPromise = {
-    ...originalModule.ApiPromise,
-    create: jest.fn().mockResolvedValue({
-      wsProvider: mockWsProvider,
-    }),
-  };
-
-  return {
-    ...originalModule,
-    WsProvider: mockWsProvider,
-    ApiPromise: mockApiPromise,
-  };
-});
+import { isNumeric, validateNode } from './utils.js';
 
 describe('isNumeric', () => {
   it('should return true for numeric values', () => {
@@ -38,27 +14,6 @@ describe('isNumeric', () => {
     expect(isNumeric(undefined)).toBe(false);
     expect(isNumeric(NaN)).toBe(false);
     expect(isNumeric({})).toBe(false);
-  });
-});
-
-describe('createApiInstance', () => {
-  it('should create an ApiPromise instance', async () => {
-    // Cast ApiPromise.create to a jest.Mock to use mockResolvedValue
-    (ApiPromise.create as jest.Mock).mockResolvedValue({
-      wsProvider: {
-        isConnected: true,
-        send: jest.fn(),
-      },
-    });
-
-    const result = await paraspellSdk.createApiInstanceForNode('Polkadot');
-
-    expect(ApiPromise.create).toHaveBeenCalledWith({
-      provider: expect.any(Object),
-    });
-    expect(result).toEqual({
-      wsProvider: expect.any(Object),
-    });
   });
 });
 

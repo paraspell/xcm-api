@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as Mixpanel from 'mixpanel';
-import { EventName } from './EventName';
-import * as UAParser from 'ua-parser-js';
+import { EventName } from './EventName.js';
+import UAParser from 'ua-parser-js';
 
 @Injectable()
 export class AnalyticsService {

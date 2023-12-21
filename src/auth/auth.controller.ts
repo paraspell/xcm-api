@@ -7,10 +7,10 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { HigherRequestLimitDto } from './dto/HigherRequestLimitDto';
-import { AnalyticsService } from '../analytics/analytics.service';
-import { EventName } from '../analytics/EventName';
+import { AuthService } from './auth.service.js';
+import { HigherRequestLimitDto } from './dto/HigherRequestLimitDto.js';
+import { AnalyticsService } from '../analytics/analytics.service.js';
+import { EventName } from '../analytics/EventName.js';
 
 @Controller('auth')
 export class AuthController {

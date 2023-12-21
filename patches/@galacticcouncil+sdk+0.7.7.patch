@@ -1,0 +1,13 @@
+diff --git a/node_modules/@galacticcouncil/sdk/package.json b/node_modules/@galacticcouncil/sdk/package.json
+index 58c77ac..ddb1af2 100644
+--- a/node_modules/@galacticcouncil/sdk/package.json
++++ b/node_modules/@galacticcouncil/sdk/package.json
+@@ -20,7 +20,7 @@
+   "files": [
+     "build"
+   ],
+-  "main": "./build/index.cjs",
++  "main": "./build/index.mjs",
+   "module": "./build/index.mjs",
+   "types": "./build/types/index.d.ts",
+   "scripts": {

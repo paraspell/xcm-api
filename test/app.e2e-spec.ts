@@ -1,11 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { AppModule } from './../src/app.module';
 import {
   Builder,
   NODE_NAMES,
   TNode,
+  createApiInstanceForNode,
   getAllAssetsSymbols,
   getAssetsObject,
   getDefaultPallet,
@@ -17,7 +18,8 @@ import {
   hasSupportForAsset,
 } from '@paraspell/sdk';
 import { ApiPromise } from '@polkadot/api';
-import { createApiInstance, determineWsUrl } from '../src/utils';
+import { RouterDto } from '../src/router/dto/RouterDto';
+import { describe, beforeAll, it, expect } from 'vitest';
 
 describe('XCM API (e2e)', () => {
   let app: INestApplication;
@@ -210,24 +212,26 @@ describe('XCM API (e2e)', () => {
             .expect(assetId);
         });
 
-        const assetDecimalsUrl = `/assets/${node}/decimals`;
-        it(`Get asset decimals - ${assetDecimalsUrl} symbol=${symbol} (GET)`, () => {
-          return request(app.getHttpServer())
-            .get(assetDecimalsUrl)
-            .query({ symbol })
-            .expect(200)
-            .expect((res) => expect(Number(res.text)).toEqual(decimals));
-        });
+        if (symbol) {
+          const assetDecimalsUrl = `/assets/${node}/decimals`;
+          it(`Get asset decimals - ${assetDecimalsUrl} symbol=${symbol} (GET)`, () => {
+            return request(app.getHttpServer())
+              .get(assetDecimalsUrl)
+              .query({ symbol })
+              .expect(200)
+              .expect((res) => expect(Number(res.text)).toEqual(decimals));
+          });
 
-        const hasSupportUrl = `/assets/${node}/has-support`;
-        it(`Has support for asset - ${hasSupportUrl} (GET)`, () => {
-          const hasSupport = hasSupportForAsset(node, symbol);
-          return request(app.getHttpServer())
-            .get(hasSupportUrl)
-            .query({ symbol })
-            .expect(200)
-            .expect((res) => expect(Boolean(res.text)).toEqual(hasSupport));
-        });
+          const hasSupportUrl = `/assets/${node}/has-support`;
+          it(`Has support for asset - ${hasSupportUrl} (GET)`, () => {
+            const hasSupport = hasSupportForAsset(node, symbol);
+            return request(app.getHttpServer())
+              .get(hasSupportUrl)
+              .query({ symbol })
+              .expect(200)
+              .expect((res) => expect(Boolean(res.text)).toEqual(hasSupport));
+          });
+        }
       }
 
       const relayChainSymbolUrl = `/assets/${node}/relay-chain-symbol`;
@@ -342,6 +346,7 @@ describe('XCM API (e2e)', () => {
     const amount = '1000000000';
     const address = 'FagnR7YW9N2PZfxC3dwSqQjb59Jsz3x35UZ24MqtA4eTVZR';
     const xTransferUrl = '/x-transfer';
+    const routerUrl = '/router';
 
     it(`Generate XCM call - No from or to provided - ${xTransferUrl} (GET)`, () => {
       return request(app.getHttpServer())
@@ -401,11 +406,10 @@ describe('XCM API (e2e)', () => {
     });
 
     it(`Generate XCM call - Parachain to parachain all valid - ${xTransferUrl} (GET)`, async () => {
-      const from: TNode = 'Statemine';
+      const from: TNode = 'AssetHubKusama';
       const to: TNode = 'Basilisk';
       const currency = 'KSM';
-      const wsUrl = determineWsUrl(from, to);
-      const api = await createApiInstance(wsUrl);
+      const api = await createApiInstanceForNode(from);
       const serializedApiCall = Builder(api)
         .from(from)
         .to(to)
@@ -428,9 +432,8 @@ describe('XCM API (e2e)', () => {
     });
 
     it(`Generate XCM call - Parachain to relaychain all valid - ${xTransferUrl} (GET)`, async () => {
-      const from: TNode = 'Statemine';
-      const wsUrl = determineWsUrl(from);
-      const api = await createApiInstance(wsUrl);
+      const from: TNode = 'AssetHubKusama';
+      const api = await createApiInstanceForNode(from);
       const serializedApiCall = Builder(api)
         .from(from)
         .amount(amount)
@@ -449,9 +452,8 @@ describe('XCM API (e2e)', () => {
     });
 
     it(`Generate XCM call - Relaychain to parachain all valid - ${xTransferUrl} (GET)`, async () => {
-      const to: TNode = 'Statemine';
-      const wsUrl = determineWsUrl(undefined, to);
-      const api = await createApiInstance(wsUrl);
+      const to: TNode = 'AssetHubKusama';
+      const api = await createApiInstanceForNode(to);
       const serializedApiCall = Builder(api)
         .to(to)
         .amount(amount)
@@ -467,6 +469,49 @@ describe('XCM API (e2e)', () => {
         })
         .expect(200)
         .expect(serializedApiCall);
+    });
+
+    const routerOptions: RouterDto = {
+      from: 'Astar',
+      exchange: 'HydraDxDex',
+      to: 'Moonbeam',
+      currencyFrom: 'ASTR',
+      currencyTo: 'GLMR',
+      amount: '10000000000000000000',
+      injectorAddress: '5F5586mfsnM6durWRLptYt3jSUs55KEmahdodQ5tQMr9iY96',
+      recipientAddress: '5F5586mfsnM6durWRLptYt3jSUs55KEmahdodQ5tQMr9iY96',
+      slippagePct: '1',
+    };
+
+    it(`Generate router call - manual exchange select - ${routerUrl} (GET)`, async () => {
+      return request(app.getHttpServer())
+        .get(routerUrl)
+        .query(routerOptions)
+        .expect(200)
+        .expect((res) => {
+          const data = JSON.parse(res.text);
+          expect(data).toHaveProperty('txs');
+          expect(data).toHaveProperty('exchangeNode');
+          expect(Array.isArray(data.txs)).toBeTruthy();
+        });
+    });
+
+    it(`Generate router call - automatic exchange select - ${routerUrl} (GET)`, async () => {
+      const automaticSelectOptions = {
+        ...routerOptions,
+        exchange: undefined,
+      };
+
+      return request(app.getHttpServer())
+        .get(routerUrl)
+        .query(automaticSelectOptions)
+        .expect(200)
+        .expect((res) => {
+          const data = JSON.parse(res.text);
+          expect(data).toHaveProperty('txs');
+          expect(data).toHaveProperty('exchangeNode');
+          expect(Array.isArray(data.txs)).toBeTruthy();
+        });
     });
   });
 });

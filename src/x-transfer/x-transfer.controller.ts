@@ -1,8 +1,8 @@
 import { Controller, Get, Query, Req } from '@nestjs/common';
-import { XTransferService } from './x-transfer.service';
-import { XTransferDto } from './dto/XTransferDto';
-import { AnalyticsService } from '../analytics/analytics.service';
-import { EventName } from '../analytics/EventName';
+import { XTransferService } from './x-transfer.service.js';
+import { XTransferDto } from './dto/XTransferDto.js';
+import { AnalyticsService } from '../analytics/analytics.service.js';
+import { EventName } from '../analytics/EventName.js';
 
 @Controller('x-transfer')
 export class XTransferController {

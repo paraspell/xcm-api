@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TNode, getDefaultPallet, getSupportedPallets } from '@paraspell/sdk';
-import { validateNode } from '../utils';
+import { validateNode } from '../utils.js';
 
 @Injectable()
 export class PalletsService {

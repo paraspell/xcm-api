@@ -1,11 +1,11 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ChannelsController } from './channels.controller';
-import { ChannelsService } from './channels.service';
-import { OpenChannelDto } from './dto/open-channel.dto';
-import { CloseChannelDto } from './dto/close-channel.dto';
-import { createMock } from '@golevelup/ts-jest';
-import { AnalyticsService } from 'src/analytics/analytics.service';
-import { mockRequestObject } from 'src/testUtils';
+import { ChannelsController } from './channels.controller.js';
+import { ChannelsService } from './channels.service.js';
+import { OpenChannelDto } from './dto/open-channel.dto.js';
+import { CloseChannelDto } from './dto/close-channel.dto.js';
+import { AnalyticsService } from '../analytics/analytics.service.js';
+import { mockRequestObject } from '../testUtils.js';
 
 // Integration tests to ensure controller and service are working together
 describe('ChannelsController', () => {
@@ -17,7 +17,10 @@ describe('ChannelsController', () => {
       controllers: [ChannelsController],
       providers: [
         ChannelsService,
-        { provide: AnalyticsService, useValue: createMock<AnalyticsService>() },
+        {
+          provide: AnalyticsService,
+          useValue: { get: () => '', track: vi.fn() },
+        },
       ],
     }).compile();
 
@@ -38,9 +41,9 @@ describe('ChannelsController', () => {
         maxMessageSize: '256',
       };
       const mockResult = 'serialized-api-call';
-      jest
-        .spyOn(channelsService, 'openChannel' as any)
-        .mockResolvedValue(mockResult);
+      vi.spyOn(channelsService, 'openChannel' as any).mockResolvedValue(
+        mockResult,
+      );
 
       const result = await controller.openChannel(
         openChannelDto,
@@ -60,9 +63,9 @@ describe('ChannelsController', () => {
         outbound: '2',
       };
       const mockResult = 'serialized-api-call';
-      jest
-        .spyOn(channelsService, 'closeChannel' as any)
-        .mockResolvedValue(mockResult);
+      vi.spyOn(channelsService, 'closeChannel' as any).mockResolvedValue(
+        mockResult,
+      );
 
       const result = await controller.closeChannel(
         closeChannelDto,

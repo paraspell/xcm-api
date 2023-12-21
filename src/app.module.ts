@@ -1,28 +1,35 @@
 import { HttpException, HttpStatus, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { XTransferModule } from './x-transfer/x-transfer.module';
-import { AssetsModule } from './assets/assets.module';
-import { ChannelsModule } from './channels/channels.module';
-import { PalletsModule } from './pallets/pallets.module';
+import { AppController } from './app.controller.js';
+import { XTransferModule } from './x-transfer/x-transfer.module.js';
+import { AssetsModule } from './assets/assets.module.js';
+import { ChannelsModule } from './channels/channels.module.js';
+import { PalletsModule } from './pallets/pallets.module.js';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { AuthModule } from './auth/auth.module';
-import { AuthGuard } from './auth/auth.guard';
+import { AuthModule } from './auth/auth.module.js';
+import { AuthGuard } from './auth/auth.guard.js';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersService } from './users/users.service';
-import { AnalyticsModule } from './analytics/analytics.module';
+import { UsersService } from './users/users.service.js';
+import { AnalyticsModule } from './analytics/analytics.module.js';
 import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
-import { sentryConfig } from './config/sentry.config';
-import { typeOrmConfig } from './config/typeorm.config';
-import { throttlerConfig } from './config/throttler.config';
+import { sentryConfig } from './config/sentry.config.js';
+import { typeOrmConfig } from './config/typeorm.config.js';
+import { throttlerConfig } from './config/throttler.config.js';
+import { RouterModule } from './router/router.module.js';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 @Module({
   imports: [
     AnalyticsModule,
     XTransferModule,
+    RouterModule,
     AssetsModule,
     ChannelsModule,
     PalletsModule,

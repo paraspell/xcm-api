@@ -1,13 +1,21 @@
+import { MockInstance, vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AssetsService } from './assets.service';
+import { AssetsService } from './assets.service.js';
 import * as paraspellSdk from '@paraspell/sdk';
 import { TNode } from '@paraspell/sdk';
-import * as utils from '../utils';
+import * as utils from '../utils.js';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+
+vi.mock('@paraspell/sdk', async () => {
+  const actual = await vi.importActual('@paraspell/sdk');
+  return {
+    ...actual,
+    getTNode: vi.fn().mockImplementation(() => 'Acala'),
+  };
+});
 
 describe('AssetsService', () => {
   let service: AssetsService;
-  let validateNodeSpy: jest.SpyInstance;
   const node: TNode = 'Acala';
   const invalidNode = 'InvalidNode';
   const symbol = 'DOT';
@@ -22,8 +30,10 @@ describe('AssetsService', () => {
     }).compile();
 
     service = module.get<AssetsService>(AssetsService);
+  });
 
-    validateNodeSpy = jest.spyOn(utils, 'validateNode');
+  afterEach(() => {
+    vi.resetAllMocks();
   });
 
   it('should be defined', () => {
@@ -38,14 +48,14 @@ describe('AssetsService', () => {
   });
 
   describe('getAssetsObject', () => {
-    let getAssetsObjectSpy: jest.SpyInstance;
+    let getAssetsObjectSpy: MockInstance;
 
     beforeEach(() => {
-      getAssetsObjectSpy = jest.spyOn(paraspellSdk, 'getAssetsObject');
+      getAssetsObjectSpy = vi.spyOn(paraspellSdk, 'getAssetsObject');
     });
 
     afterEach(() => {
-      getAssetsObjectSpy.mockRestore();
+      vi.clearAllMocks();
     });
 
     it('should return assets object for a valid node', () => {
@@ -55,7 +65,10 @@ describe('AssetsService', () => {
         nativeAssets: [{ symbol, decimals }],
         otherAssets: [{ assetId, symbol: 'BSK', decimals }],
       };
-      getAssetsObjectSpy.mockReturnValue(assetsObject);
+
+      const validateNodeSpy = vi.spyOn(utils, 'validateNode');
+
+      getAssetsObjectSpy.mockImplementation(() => assetsObject);
 
       const result = service.getAssetsObject(node);
       expect(result).toEqual(assetsObject);
@@ -64,6 +77,12 @@ describe('AssetsService', () => {
     });
 
     it('should throw if node is invalid', () => {
+      const validateNodeSpy = vi
+        .spyOn(utils, 'validateNode')
+        .mockImplementation(() => {
+          throw new BadRequestException();
+        });
+
       expect(() => service.getAssetsObject(invalidNode)).toThrow(
         BadRequestException,
       );
@@ -74,14 +93,14 @@ describe('AssetsService', () => {
   });
 
   describe('getAssetId', () => {
-    let getAssetIdSpy: jest.SpyInstance;
+    let getAssetIdSpy: MockInstance;
 
     beforeEach(async () => {
-      getAssetIdSpy = jest.spyOn(paraspellSdk, 'getAssetId');
+      getAssetIdSpy = vi.spyOn(paraspellSdk, 'getAssetId');
     });
 
     afterEach(() => {
-      getAssetIdSpy.mockRestore();
+      vi.clearAllMocks();
     });
 
     it('should return asset ID for a valid node and symbol', () => {
@@ -103,22 +122,30 @@ describe('AssetsService', () => {
     });
 
     it('should throw BadRequestException for invalid node', () => {
+      const validateNodeSpy = vi
+        .spyOn(utils, 'validateNode')
+        .mockImplementation(() => {
+          throw new BadRequestException();
+        });
+
       expect(() => service.getAssetId(invalidNode, symbol)).toThrow(
         BadRequestException,
       );
+
+      expect(validateNodeSpy).toHaveBeenCalledWith(invalidNode);
       expect(getAssetIdSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('getRelayChainSymbol', () => {
-    let getRelayChainSymbolSpy: jest.SpyInstance;
+    let getRelayChainSymbolSpy: MockInstance;
 
     beforeEach(async () => {
-      getRelayChainSymbolSpy = jest.spyOn(paraspellSdk, 'getRelayChainSymbol');
+      getRelayChainSymbolSpy = vi.spyOn(paraspellSdk, 'getRelayChainSymbol');
     });
 
     afterEach(() => {
-      getRelayChainSymbolSpy.mockRestore();
+      vi.resetAllMocks();
     });
 
     it('should return relay chain symbol for a valid node', () => {
@@ -132,22 +159,30 @@ describe('AssetsService', () => {
     });
 
     it('should throw BadRequestException for invalid node', () => {
+      const validateNodeSpy = vi
+        .spyOn(utils, 'validateNode')
+        .mockImplementation(() => {
+          throw new BadRequestException();
+        });
+
       expect(() => service.getRelayChainSymbol(invalidNode)).toThrow(
         BadRequestException,
       );
+
+      expect(validateNodeSpy).toHaveBeenCalledWith(invalidNode);
       expect(getRelayChainSymbolSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('getNativeAssets', () => {
-    let getNativeAssetsSpy: jest.SpyInstance;
+    let getNativeAssetsSpy: MockInstance;
 
     beforeEach(async () => {
-      getNativeAssetsSpy = jest.spyOn(paraspellSdk, 'getNativeAssets');
+      getNativeAssetsSpy = vi.spyOn(paraspellSdk, 'getNativeAssets');
     });
 
     afterEach(() => {
-      getNativeAssetsSpy.mockRestore();
+      vi.clearAllMocks();
     });
 
     it('should return native assets for a valid node', () => {
@@ -161,18 +196,26 @@ describe('AssetsService', () => {
     });
 
     it('should throw BadRequestException for invalid node', () => {
+      const validateNodeSpy = vi
+        .spyOn(utils, 'validateNode')
+        .mockImplementation(() => {
+          throw new BadRequestException();
+        });
+
       expect(() => service.getNativeAssets(invalidNode)).toThrow(
         BadRequestException,
       );
+
+      expect(validateNodeSpy).toHaveBeenCalledWith(invalidNode);
       expect(getNativeAssetsSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('getOtherAssets', () => {
-    let getOtherAssetsSpy: jest.SpyInstance;
+    let getOtherAssetsSpy: MockInstance;
 
     beforeEach(async () => {
-      getOtherAssetsSpy = jest.spyOn(paraspellSdk, 'getOtherAssets');
+      getOtherAssetsSpy = vi.spyOn(paraspellSdk, 'getOtherAssets');
     });
 
     afterEach(() => {
@@ -190,22 +233,30 @@ describe('AssetsService', () => {
     });
 
     it('should throw BadRequestException for invalid node', () => {
+      const validateNodeSpy = vi
+        .spyOn(utils, 'validateNode')
+        .mockImplementation(() => {
+          throw new BadRequestException();
+        });
+
       expect(() => service.getOtherAssets(invalidNode)).toThrow(
         BadRequestException,
       );
+
+      expect(validateNodeSpy).toHaveBeenCalledWith(invalidNode);
       expect(getOtherAssetsSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('getAllAssetsSymbols', () => {
-    let getAllAssetsSymbolsSpy: jest.SpyInstance;
+    let getAllAssetsSymbolsSpy: MockInstance;
 
     beforeEach(async () => {
-      getAllAssetsSymbolsSpy = jest.spyOn(paraspellSdk, 'getAllAssetsSymbols');
+      getAllAssetsSymbolsSpy = vi.spyOn(paraspellSdk, 'getAllAssetsSymbols');
     });
 
     afterEach(() => {
-      getAllAssetsSymbolsSpy.mockRestore();
+      vi.clearAllMocks();
     });
 
     it('should return all assets symbols for a valid node', () => {
@@ -219,22 +270,30 @@ describe('AssetsService', () => {
     });
 
     it('should throw BadRequestException for invalid node', () => {
+      const validateNodeSpy = vi
+        .spyOn(utils, 'validateNode')
+        .mockImplementation(() => {
+          throw new BadRequestException();
+        });
+
       expect(() => service.getAllAssetsSymbols(invalidNode)).toThrow(
         BadRequestException,
       );
+
+      expect(validateNodeSpy).toHaveBeenCalledWith(invalidNode);
       expect(getAllAssetsSymbolsSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('getDecimals', () => {
-    let getAssetDecimalsSpy: jest.SpyInstance;
+    let getAssetDecimalsSpy: MockInstance;
 
     beforeEach(async () => {
-      getAssetDecimalsSpy = jest.spyOn(paraspellSdk, 'getAssetDecimals');
+      getAssetDecimalsSpy = vi.spyOn(paraspellSdk, 'getAssetDecimals');
     });
 
     afterEach(() => {
-      getAssetDecimalsSpy.mockRestore();
+      vi.clearAllMocks();
     });
 
     it('should return asset decimals for a valid node and symbol', () => {
@@ -259,22 +318,30 @@ describe('AssetsService', () => {
     });
 
     it('should throw BadRequestException for invalid node', () => {
+      const validateNodeSpy = vi
+        .spyOn(utils, 'validateNode')
+        .mockImplementation(() => {
+          throw new BadRequestException();
+        });
+
       expect(() => service.getDecimals(invalidNode, symbol)).toThrow(
         BadRequestException,
       );
+
+      expect(validateNodeSpy).toHaveBeenCalledWith(invalidNode);
       expect(getAssetDecimalsSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('hasSupportForAsset', () => {
-    let hasSupportForAssetSpy: jest.SpyInstance;
+    let hasSupportForAssetSpy: MockInstance;
 
     beforeEach(async () => {
-      hasSupportForAssetSpy = jest.spyOn(paraspellSdk, 'hasSupportForAsset');
+      hasSupportForAssetSpy = vi.spyOn(paraspellSdk, 'hasSupportForAsset');
     });
 
     afterEach(() => {
-      hasSupportForAssetSpy.mockRestore();
+      vi.clearAllMocks();
     });
 
     it('should return true if asset is supported for a valid node and symbol', () => {
@@ -296,22 +363,30 @@ describe('AssetsService', () => {
     });
 
     it('should throw BadRequestException for invalid node', () => {
+      const validateNodeSpy = vi
+        .spyOn(utils, 'validateNode')
+        .mockImplementation(() => {
+          throw new BadRequestException();
+        });
+
       expect(() => service.hasSupportForAsset(invalidNode, symbol)).toThrow(
         BadRequestException,
       );
+
+      expect(validateNodeSpy).toHaveBeenCalledWith(invalidNode);
       expect(hasSupportForAssetSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('AssetsService', () => {
-    let getParaIdSpy: jest.SpyInstance;
+    let getParaIdSpy: MockInstance;
 
     beforeEach(async () => {
-      getParaIdSpy = jest.spyOn(paraspellSdk, 'getParaId');
+      getParaIdSpy = vi.spyOn(paraspellSdk, 'getParaId');
     });
 
     afterEach(() => {
-      getParaIdSpy.mockRestore();
+      vi.clearAllMocks();
     });
 
     describe('getParaId', () => {
@@ -323,26 +398,30 @@ describe('AssetsService', () => {
       });
 
       it('should throw BadRequestException for invalid node', () => {
+        const validateNodeSpy = vi
+          .spyOn(utils, 'validateNode')
+          .mockImplementation(() => {
+            throw new BadRequestException();
+          });
         expect(() => service.getParaId(invalidNode)).toThrow(
           BadRequestException,
         );
+
+        expect(validateNodeSpy).toHaveBeenCalledWith(invalidNode);
         expect(getParaIdSpy).not.toHaveBeenCalled();
       });
     });
   });
 
   describe('getNodeByParaId', () => {
-    let getTNodeSpy: jest.SpyInstance;
+    let getTNodeSpy: MockInstance;
 
     beforeEach(async () => {
-      getTNodeSpy = jest.spyOn(paraspellSdk, 'getTNode');
-    });
-
-    afterEach(() => {
-      getTNodeSpy.mockRestore();
+      getTNodeSpy = vi.spyOn(paraspellSdk, 'getTNode');
     });
 
     it('should return node by parachain ID', () => {
+      getTNodeSpy.mockReturnValue(node);
       const result = service.getNodeByParaId(paraId);
 
       expect(result).toEqual(JSON.stringify(node));

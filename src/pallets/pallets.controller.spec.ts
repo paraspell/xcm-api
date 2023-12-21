@@ -1,10 +1,10 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { PalletsController } from './pallets.controller';
-import { PalletsService } from './pallets.service';
+import { PalletsController } from './pallets.controller.js';
+import { PalletsService } from './pallets.service.js';
 import { TNode, TPallet } from '@paraspell/sdk';
-import { mockRequestObject } from 'src/testUtils';
-import { AnalyticsService } from 'src/analytics/analytics.service';
-import { createMock } from '@golevelup/ts-jest';
+import { mockRequestObject } from '../testUtils.js';
+import { AnalyticsService } from '../analytics/analytics.service.js';
 
 // Integration tests to ensure controller and service are working together
 describe('PalletsController', () => {
@@ -17,7 +17,10 @@ describe('PalletsController', () => {
       controllers: [PalletsController],
       providers: [
         PalletsService,
-        { provide: AnalyticsService, useValue: createMock<AnalyticsService>() },
+        {
+          provide: AnalyticsService,
+          useValue: { get: () => '', track: vi.fn() },
+        },
       ],
     }).compile();
 
@@ -32,9 +35,9 @@ describe('PalletsController', () => {
   describe('getDefaultPallet', () => {
     it('should return the default pallet for the given node', async () => {
       const defaultPallet: TPallet = 'OrmlXTokens';
-      jest
-        .spyOn(palletsService, 'getDefaultPallet' as any)
-        .mockResolvedValue(defaultPallet);
+      vi.spyOn(palletsService, 'getDefaultPallet' as any).mockResolvedValue(
+        defaultPallet,
+      );
 
       const result = await controller.getDefaultPallet(node, mockRequestObject);
 
@@ -46,9 +49,7 @@ describe('PalletsController', () => {
   describe('getPallets', () => {
     it('should return the list of pallets for the given node', async () => {
       const pallets: TPallet[] = ['OrmlXTokens', 'PolkadotXcm'];
-      jest
-        .spyOn(palletsService, 'getPallets' as any)
-        .mockResolvedValue(pallets);
+      vi.spyOn(palletsService, 'getPallets' as any).mockResolvedValue(pallets);
 
       const result = await controller.getPallets(node, mockRequestObject);
 

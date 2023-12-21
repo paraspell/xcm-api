@@ -1,16 +1,38 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { XTransferService } from './x-transfer.service';
-import * as paraspellSdk from '@paraspell/sdk';
-import { TNode, InvalidCurrencyError } from '@paraspell/sdk';
-import { XTransferDto } from './dto/XTransferDto';
+import { XTransferService } from './x-transfer.service.js';
+import { XTransferDto } from './dto/XTransferDto.js';
 import {
   BadRequestException,
   InternalServerErrorException,
 } from '@nestjs/common';
+import { vi } from 'vitest';
+import * as paraspellSdk from '@paraspell/sdk';
+import {
+  InvalidCurrencyError,
+  TNode,
+  createApiInstanceForNode,
+} from '@paraspell/sdk';
+
+const builderMock = {
+  from: vi.fn().mockReturnThis(),
+  to: vi.fn().mockReturnThis(),
+  currency: vi.fn().mockReturnThis(),
+  amount: vi.fn().mockReturnThis(),
+  address: vi.fn().mockReturnThis(),
+  buildSerializedApiCall: vi.fn().mockReturnValue('serialized-api-call'),
+};
+
+vi.mock('@paraspell/sdk', async () => {
+  const actual = await vi.importActual('@paraspell/sdk');
+  return {
+    ...actual,
+    createApiInstanceForNode: vi.fn().mockResolvedValue(undefined),
+    Builder: vi.fn().mockImplementation(() => builderMock),
+  };
+});
 
 describe('XTransferService', () => {
   let service: XTransferService;
-  let createApiInstanceForNodeSpy: jest.SpyInstance;
 
   const amount = 100;
   const address = '5F5586mfsnM6durWRLptYt3jSUs55KEmahdodQ5tQMr9iY96';
@@ -24,13 +46,10 @@ describe('XTransferService', () => {
     }).compile();
 
     service = module.get<XTransferService>(XTransferService);
-    createApiInstanceForNodeSpy = jest
-      .spyOn(paraspellSdk, 'createApiInstanceForNode')
-      .mockResolvedValue(null as any);
   });
 
   afterEach(() => {
-    createApiInstanceForNodeSpy.mockRestore();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -49,20 +68,10 @@ describe('XTransferService', () => {
         currency,
       };
 
-      const builderMock = {
-        from: jest.fn().mockReturnThis(),
-        to: jest.fn().mockReturnThis(),
-        currency: jest.fn().mockReturnThis(),
-        amount: jest.fn().mockReturnThis(),
-        address: jest.fn().mockReturnThis(),
-        buildSerializedApiCall: jest.fn().mockReturnValue(serializedApiCall),
-      };
-      jest.spyOn(paraspellSdk, 'Builder').mockReturnValue(builderMock as any);
-
       const result = await service.generateXcmCall(xTransferDto);
 
       expect(result).toBe(serializedApiCall);
-      expect(createApiInstanceForNodeSpy).toHaveBeenCalledWith(from);
+      expect(createApiInstanceForNode).toHaveBeenCalledWith(from);
       expect(builderMock.from).toHaveBeenCalledWith(from);
       expect(builderMock.to).toHaveBeenCalledWith(to);
       expect(builderMock.currency).toHaveBeenCalledWith(currency);
@@ -81,18 +90,10 @@ describe('XTransferService', () => {
         currency,
       };
 
-      const builderMock = {
-        from: jest.fn().mockReturnThis(),
-        amount: jest.fn().mockReturnThis(),
-        address: jest.fn().mockReturnThis(),
-        buildSerializedApiCall: jest.fn().mockReturnValue(serializedApiCall),
-      };
-      jest.spyOn(paraspellSdk, 'Builder').mockReturnValue(builderMock as any);
-
       const result = await service.generateXcmCall(xTransferDto);
 
       expect(result).toBe(serializedApiCall);
-      expect(createApiInstanceForNodeSpy).toHaveBeenCalledWith(from);
+      expect(createApiInstanceForNode).toHaveBeenCalledWith(from);
       expect(builderMock.from).toHaveBeenCalledWith(from);
       expect(builderMock.amount).toHaveBeenCalledWith(amount);
       expect(builderMock.address).toHaveBeenCalledWith(address);
@@ -107,18 +108,10 @@ describe('XTransferService', () => {
         address,
       };
 
-      const builderMock = {
-        to: jest.fn().mockReturnThis(),
-        amount: jest.fn().mockReturnThis(),
-        address: jest.fn().mockReturnThis(),
-        buildSerializedApiCall: jest.fn().mockReturnValue(serializedApiCall),
-      };
-      jest.spyOn(paraspellSdk, 'Builder').mockReturnValue(builderMock as any);
-
       const result = await service.generateXcmCall(xTransferDto);
 
       expect(result).toBe(serializedApiCall);
-      expect(createApiInstanceForNodeSpy).toHaveBeenCalledWith(to);
+      expect(createApiInstanceForNode).toHaveBeenCalledWith(to);
       expect(builderMock.to).toHaveBeenCalledWith(to);
       expect(builderMock.amount).toHaveBeenCalledWith(amount);
       expect(builderMock.address).toHaveBeenCalledWith(address);
@@ -136,7 +129,7 @@ describe('XTransferService', () => {
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(createApiInstanceForNodeSpy).not.toHaveBeenCalled();
+      expect(createApiInstanceForNode).not.toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for invalid to node', async () => {
@@ -150,7 +143,7 @@ describe('XTransferService', () => {
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(createApiInstanceForNodeSpy).not.toHaveBeenCalled();
+      expect(createApiInstanceForNode).not.toHaveBeenCalled();
     });
 
     it('should throw BadRequestException when from and to node are missing', async () => {
@@ -163,7 +156,7 @@ describe('XTransferService', () => {
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(createApiInstanceForNodeSpy).not.toHaveBeenCalled();
+      expect(createApiInstanceForNode).not.toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for missing currency in parachain to parachain transfer', async () => {
@@ -177,7 +170,7 @@ describe('XTransferService', () => {
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(createApiInstanceForNodeSpy).not.toHaveBeenCalled();
+      expect(createApiInstanceForNode).not.toHaveBeenCalled();
     });
 
     it('should throw BadRequestException for invalid currency', async () => {
@@ -190,21 +183,21 @@ describe('XTransferService', () => {
       };
 
       const builderMock = {
-        from: jest.fn().mockReturnThis(),
-        to: jest.fn().mockReturnThis(),
-        currency: jest.fn().mockReturnThis(),
-        amount: jest.fn().mockReturnThis(),
-        address: jest.fn().mockReturnThis(),
-        buildSerializedApiCall: jest.fn().mockImplementation(() => {
+        from: vi.fn().mockReturnThis(),
+        to: vi.fn().mockReturnThis(),
+        currency: vi.fn().mockReturnThis(),
+        amount: vi.fn().mockReturnThis(),
+        address: vi.fn().mockReturnThis(),
+        buildSerializedApiCall: vi.fn().mockImplementation(() => {
           throw new InvalidCurrencyError('');
         }),
       };
-      jest.spyOn(paraspellSdk, 'Builder').mockReturnValue(builderMock as any);
+      vi.spyOn(paraspellSdk, 'Builder').mockReturnValue(builderMock as any);
 
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         BadRequestException,
       );
-      expect(createApiInstanceForNodeSpy).toHaveBeenCalled();
+      expect(createApiInstanceForNode).toHaveBeenCalled();
     });
 
     it('should throw InternalServerError when uknown error occures in the SDK', async () => {
@@ -217,21 +210,21 @@ describe('XTransferService', () => {
       };
 
       const builderMock = {
-        from: jest.fn().mockReturnThis(),
-        to: jest.fn().mockReturnThis(),
-        currency: jest.fn().mockReturnThis(),
-        amount: jest.fn().mockReturnThis(),
-        address: jest.fn().mockReturnThis(),
-        buildSerializedApiCall: jest.fn().mockImplementation(() => {
+        from: vi.fn().mockReturnThis(),
+        to: vi.fn().mockReturnThis(),
+        currency: vi.fn().mockReturnThis(),
+        amount: vi.fn().mockReturnThis(),
+        address: vi.fn().mockReturnThis(),
+        buildSerializedApiCall: vi.fn().mockImplementation(() => {
           throw new Error('Unknown error');
         }),
       };
-      jest.spyOn(paraspellSdk, 'Builder').mockReturnValue(builderMock as any);
+      vi.spyOn(paraspellSdk, 'Builder').mockReturnValue(builderMock as any);
 
       await expect(service.generateXcmCall(xTransferDto)).rejects.toThrow(
         InternalServerErrorException,
       );
-      expect(createApiInstanceForNodeSpy).toHaveBeenCalled();
+      expect(createApiInstanceForNode).toHaveBeenCalled();
     });
   });
 });

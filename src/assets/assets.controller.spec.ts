@@ -1,10 +1,10 @@
+import { vi } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
-import { AssetsController } from './assets.controller';
-import { AssetsService } from './assets.service';
+import { AssetsController } from './assets.controller.js';
+import { AssetsService } from './assets.service.js';
 import { TNode } from '@paraspell/sdk';
-import { mockRequestObject } from 'src/testUtils';
-import { AnalyticsService } from 'src/analytics/analytics.service';
-import { createMock } from '@golevelup/ts-jest';
+import { AnalyticsService } from '../analytics/analytics.service.js';
+import { mockRequestObject } from '../testUtils.js';
 
 // Integration tests to ensure controller and service are working together
 describe('AssetsController', () => {
@@ -19,7 +19,10 @@ describe('AssetsController', () => {
       controllers: [AssetsController],
       providers: [
         AssetsService,
-        { provide: AnalyticsService, useValue: createMock<AnalyticsService>() },
+        {
+          provide: AnalyticsService,
+          useValue: { get: () => '', track: vi.fn() },
+        },
       ],
     }).compile();
 
@@ -34,9 +37,9 @@ describe('AssetsController', () => {
   describe('getNodeNames', () => {
     it('should return the list of node names', () => {
       const mockResult = ['Acala', 'Basilisk'];
-      jest
-        .spyOn(assetsService, 'getNodeNames' as any)
-        .mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getNodeNames' as any).mockReturnValue(
+        mockResult,
+      );
 
       const result = controller.getNodeNames(mockRequestObject);
 
@@ -48,9 +51,9 @@ describe('AssetsController', () => {
   describe('getNodeNames', () => {
     it('should return the list of node names', () => {
       const mockResult = [node, 'Basilisk'];
-      jest
-        .spyOn(assetsService, 'getNodeNames' as any)
-        .mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getNodeNames' as any).mockReturnValue(
+        mockResult,
+      );
 
       const result = controller.getNodeNames(mockRequestObject);
 
@@ -67,9 +70,9 @@ describe('AssetsController', () => {
       otherAssets: [{ assetId: '234123123', symbol: 'FKK', decimals }],
     };
     it('should return assets object for a valid node', () => {
-      jest
-        .spyOn(assetsService, 'getAssetsObject' as any)
-        .mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getAssetsObject' as any).mockReturnValue(
+        mockResult,
+      );
 
       const result = controller.getAssetsObject(node, mockRequestObject);
 
@@ -79,9 +82,9 @@ describe('AssetsController', () => {
 
     it('should return assets object for a valid parachain id', () => {
       const paraId = '2009';
-      jest
-        .spyOn(assetsService, 'getNodeByParaId' as any)
-        .mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getNodeByParaId' as any).mockReturnValue(
+        mockResult,
+      );
 
       const result = controller.getAssetsObject(paraId, mockRequestObject);
 
@@ -96,7 +99,7 @@ describe('AssetsController', () => {
     it('should return asset ID for a valid node and symbol', () => {
       const symbol = 'DOT';
       const mockResult = '1';
-      jest.spyOn(assetsService, 'getAssetId').mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getAssetId').mockReturnValue(mockResult);
 
       const result = controller.getAssetId(node, { symbol }, mockRequestObject);
 
@@ -108,9 +111,9 @@ describe('AssetsController', () => {
   describe('getRelayChainSymbol', () => {
     it('should return relay chain symbol for a valid node', () => {
       const mockResult = 'KSM';
-      jest
-        .spyOn(assetsService, 'getRelayChainSymbol')
-        .mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getRelayChainSymbol').mockReturnValue(
+        mockResult,
+      );
 
       const result = controller.getRelayChainSymbol(node, mockRequestObject);
 
@@ -122,7 +125,7 @@ describe('AssetsController', () => {
   describe('getNativeAssets', () => {
     it('should return native assets for a valid node', () => {
       const mockResult = [{ symbol, decimals }];
-      jest.spyOn(assetsService, 'getNativeAssets').mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getNativeAssets').mockReturnValue(mockResult);
 
       const result = controller.getNativeAssets(node, mockRequestObject);
 
@@ -134,7 +137,7 @@ describe('AssetsController', () => {
   describe('getOtherAssets', () => {
     it('should return other assets for a valid node', () => {
       const mockResult = [{ assetId: '234123123', symbol: 'FKK', decimals }];
-      jest.spyOn(assetsService, 'getOtherAssets').mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getOtherAssets').mockReturnValue(mockResult);
 
       const result = controller.getOtherAssets(node, mockRequestObject);
 
@@ -146,9 +149,9 @@ describe('AssetsController', () => {
   describe('getAllAssetsSymbol', () => {
     it('should return all assets symbols for a valid node', () => {
       const mockResult = [symbol, 'DOT'];
-      jest
-        .spyOn(assetsService, 'getAllAssetsSymbols')
-        .mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getAllAssetsSymbols').mockReturnValue(
+        mockResult,
+      );
 
       const result = controller.getAllAssetsSymbol(node, mockRequestObject);
 
@@ -160,7 +163,7 @@ describe('AssetsController', () => {
   describe('getDecimals', () => {
     it('should return decimals for a valid node and symbol', () => {
       const mockResult = 18;
-      jest.spyOn(assetsService, 'getDecimals').mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getDecimals').mockReturnValue(mockResult);
 
       const result = controller.getDecimals(
         node,
@@ -176,9 +179,7 @@ describe('AssetsController', () => {
   describe('hasSupportForAsset', () => {
     it('should return true if asset is supported for a valid node and symbol', () => {
       const mockResult = true;
-      jest
-        .spyOn(assetsService, 'hasSupportForAsset')
-        .mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'hasSupportForAsset').mockReturnValue(mockResult);
 
       const result = controller.hasSupportForAsset(
         node,
@@ -197,7 +198,7 @@ describe('AssetsController', () => {
   describe('getParaId', () => {
     it('should return parachain id for a valid node', () => {
       const mockResult = 2009;
-      jest.spyOn(assetsService, 'getParaId').mockReturnValue(mockResult);
+      vi.spyOn(assetsService, 'getParaId').mockReturnValue(mockResult);
 
       const result = controller.getParaId(node, mockRequestObject);
 

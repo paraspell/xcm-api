@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AnalyticsService } from './analytics.service';
+import { AnalyticsService } from './analytics.service.js';
 import { ConfigService } from '@nestjs/config';
-import { createMock } from '@golevelup/ts-jest';
 
 describe('AnalyticsService', () => {
   let service: AnalyticsService;
@@ -10,7 +9,7 @@ describe('AnalyticsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AnalyticsService,
-        { provide: ConfigService, useValue: createMock<ConfigService>() },
+        { provide: ConfigService, useValue: { get: () => '' } },
       ],
     }).compile();
 

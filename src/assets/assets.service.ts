@@ -13,7 +13,7 @@ import {
   getTNode,
   hasSupportForAsset,
 } from '@paraspell/sdk';
-import { validateNode } from '../utils';
+import { validateNode } from '../utils.js';
 
 @Injectable()
 export class AssetsService {
