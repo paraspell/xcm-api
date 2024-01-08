@@ -21,6 +21,9 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "postinstall": "patch-package"
   },
+  "resolutions": {
+    "@crypto-dex-sdk/chain": "0.0.4"
+  },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.0.0",
@@ -33,7 +36,7 @@
     "@nestjs/typeorm": "^10.0.0",
     "@ntegral/nestjs-sentry": "^4.0.0",
     "@paraspell/sdk": "^3.0.11",
-    "@paraspell/xcm-router": "^0.0.5",
+    "@paraspell/xcm-router": "^0.0.6",
     "@polkadot/api": "^10.10.1",
     "@polkadot/api-base": "^10.10.1",
     "@polkadot/apps-config": "^0.133.1",

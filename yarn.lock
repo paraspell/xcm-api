@@ -311,10 +311,10 @@
     tiny-invariant "^1.3.1"
     tiny-warning "^1.0.3"
 
-"@crypto-dex-sdk/chain@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@crypto-dex-sdk/chain/-/chain-0.0.2.tgz#5b3f95825ba47ffb69854d6a1f1c7c9fe777ae1a"
-  integrity sha512-A2BjYULT+OljXTsjsNV7Su1dZa3CZ0oASGC0RDTxjd1+iwRA8qNKwsn/VTzGePViNE8wphMvfiyJ94UqwnfGCg==
+"@crypto-dex-sdk/chain@0.0.2", "@crypto-dex-sdk/chain@0.0.3", "@crypto-dex-sdk/chain@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@crypto-dex-sdk/chain/-/chain-0.0.4.tgz#1bfd86c4c33e02a427699eb2d08a714390f4dc78"
+  integrity sha512-NQUWTWTSdWWlj0TjuDJr/TvzSyUF7v9BlhLJmBpFYkI3+6ENNXMO3xTZIvuilpzcTlM2OZGZVL8yGhMFKdeY4w==
 
 "@crypto-dex-sdk/currency@0.0.2":
   version "0.0.2"
@@ -329,12 +329,12 @@
     lodash.flatmap "^4.5.0"
     tiny-invariant "^1.3.1"
 
-"@crypto-dex-sdk/currency@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@crypto-dex-sdk/currency/-/currency-0.0.3.tgz#413be7976a4068f203bca5fc6b2441ccccfcc4bd"
-  integrity sha512-LHOKnZ49QxaxS0XTDPJPkDk7y9C1dpx4RofZt5LyrVCdKxOOFDywVMtCCGriaHLWl4Cm48Whs91Oyr6y1ZTwVw==
+"@crypto-dex-sdk/currency@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@crypto-dex-sdk/currency/-/currency-0.0.4.tgz#2b2a3a116c5acd5bc1fdc3ff49cc89e2f1269fd1"
+  integrity sha512-E+Hq6CM+jgLeWSExqannPa3LnomfmGN18o9FowKRP0bf5Jcf4tvH09nUpREztOxX0pGIKEN8k0XGz+YpYNp5jw==
   dependencies:
-    "@crypto-dex-sdk/chain" "0.0.2"
+    "@crypto-dex-sdk/chain" "0.0.3"
     "@crypto-dex-sdk/format" "0.0.2"
     "@crypto-dex-sdk/math" "0.0.2"
     "@ethersproject/address" "^5.7.0"
@@ -1540,10 +1540,10 @@
     "@mangata-finance/type-definitions" "^2.1.2"
     ethers "^5.7.1"
 
-"@paraspell/xcm-router@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@paraspell/xcm-router/-/xcm-router-0.0.5.tgz#c425ee0f5c966f67875a16cd50f2a05110035244"
-  integrity sha512-p5bawIyyswiuOs6zFbTM+3dbl1jQIKdQyqSiP81XeDqNvGTUECuB+L5PNMytL87BdS/A/5rsXksjr9BOKAs+nQ==
+"@paraspell/xcm-router@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@paraspell/xcm-router/-/xcm-router-0.0.6.tgz#ed4aa7b84258b0f194b582c0480dba6079d13baa"
+  integrity sha512-lht0Oy9tupmKtIGKXP6MwdvsBH2nTy+CKIAV1pes7k+upp3kqf+7CIfa3H2woG2CwcRFLq9XFLcve7tUttoDzw==
   dependencies:
     "@acala-network/api" "^6.0.4"
     "@acala-network/app-util" "^4.1.5"
@@ -1553,7 +1553,7 @@
     "@acala-network/sdk-swap" "^4.1.9-10"
     "@acala-network/sdk-wallet" "^4.1.8-14"
     "@crypto-dex-sdk/amm" "^0.0.2"
-    "@crypto-dex-sdk/currency" "^0.0.3"
+    "@crypto-dex-sdk/currency" "^0.0.4"
     "@crypto-dex-sdk/math" "^0.0.2"
     "@crypto-dex-sdk/parachains-bifrost" "^0.0.12"
     "@crypto-dex-sdk/token-lists" "^0.0.2"
