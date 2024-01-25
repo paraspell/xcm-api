@@ -66,7 +66,7 @@ export class XTransferService {
 
     let response: TSerializedApiCall;
     try {
-      response = builder.buildSerializedApiCall();
+      response = await builder.buildSerializedApiCall();
     } catch (e) {
       if (
         e instanceof InvalidCurrencyError ||

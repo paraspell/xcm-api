@@ -1532,18 +1532,18 @@
   dependencies:
     "@open-web3/orml-type-definitions" "^2.0.1"
 
-"@paraspell/sdk@^3.0.11":
-  version "3.0.11"
-  resolved "https://registry.yarnpkg.com/@paraspell/sdk/-/sdk-3.0.11.tgz#a2319938cacc7e632afff1b81a99466096408ae0"
-  integrity sha512-4nMR0eAwufg2pWDJ4++a1GGOFa2t9syLlQDoE4NhYC0o/ieRAmIwaU5Bc1kob6MQaQjsdl2JUkuFfyxQXjn2ow==
+"@paraspell/sdk@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@paraspell/sdk/-/sdk-4.0.0.tgz#493c5ed15ff1915dfcb99299d2e67f4ac756ac1e"
+  integrity sha512-TElnqnTS/6WLHvYDZF7N14XGu/kZy6mBY/QfcDCSbMEVhGPTj6ot66+XYojdTbBZRWKtm555zVJvvdO43m4/iw==
   dependencies:
     "@mangata-finance/type-definitions" "^2.1.2"
     ethers "^5.7.1"
 
-"@paraspell/xcm-router@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@paraspell/xcm-router/-/xcm-router-0.0.6.tgz#ed4aa7b84258b0f194b582c0480dba6079d13baa"
-  integrity sha512-lht0Oy9tupmKtIGKXP6MwdvsBH2nTy+CKIAV1pes7k+upp3kqf+7CIfa3H2woG2CwcRFLq9XFLcve7tUttoDzw==
+"@paraspell/xcm-router@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@paraspell/xcm-router/-/xcm-router-0.0.7.tgz#b3f704ed9e135540f61750c43d1082e32d3a77a0"
+  integrity sha512-YgfbDG4/FwBwzdv/h5pez4EwSZZ2lgv5xwY9LbCewpmAq9lxnJSiE/ObU2MbQhfGy7HJKilfHfowxckEQmw91w==
   dependencies:
     "@acala-network/api" "^6.0.4"
     "@acala-network/app-util" "^4.1.5"
@@ -1560,7 +1560,7 @@
     "@galacticcouncil/sdk" "^1.1.1"
     "@interlay/interbtc-api" "^2.6.0"
     "@mangata-finance/sdk" "^2.1.1"
-    "@paraspell/sdk" "^3.0.11"
+    "@paraspell/sdk" "^4.0.0"
     "@polkadot/api" "^10.11.1"
     "@polkadot/api-base" "^10.11.1"
     "@polkadot/apps-config" "^0.133.1"

@@ -410,7 +410,7 @@ describe('XCM API (e2e)', () => {
       const to: TNode = 'Basilisk';
       const currency = 'KSM';
       const api = await createApiInstanceForNode(from);
-      const serializedApiCall = Builder(api)
+      const serializedApiCall = await Builder(api)
         .from(from)
         .to(to)
         .currency(currency)
@@ -434,7 +434,7 @@ describe('XCM API (e2e)', () => {
     it(`Generate XCM call - Parachain to relaychain all valid - ${xTransferUrl} (GET)`, async () => {
       const from: TNode = 'AssetHubKusama';
       const api = await createApiInstanceForNode(from);
-      const serializedApiCall = Builder(api)
+      const serializedApiCall = await Builder(api)
         .from(from)
         .amount(amount)
         .address(address)
@@ -454,7 +454,7 @@ describe('XCM API (e2e)', () => {
     it(`Generate XCM call - Relaychain to parachain all valid - ${xTransferUrl} (GET)`, async () => {
       const to: TNode = 'AssetHubKusama';
       const api = await createApiInstanceForNode(to);
-      const serializedApiCall = Builder(api)
+      const serializedApiCall = await Builder(api)
         .to(to)
         .amount(amount)
         .address(address)
