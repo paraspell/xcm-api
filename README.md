@@ -1,41 +1,25 @@
-<p align="center">
-<img width="400" alt="LightSpell logo" src="https://user-images.githubusercontent.com/55763425/251588168-4855abc3-445a-4207-9a65-e891975be62c.png">
-</p>
+<br /><br />
 
-<h1 align="center">
-XCM-API (Supporting 50 Parachains)
-</h1>
+<div align="center">
+  <h1 align="center">XCM-API</h1>
+  <h4 align="center">The 🥇 XCM-API in Polkadot & Kusama ecosystem.</h4>
+  <h4 align="center"> Enhance the cross-chain experience of your Polkadot/Kusama decentralized application.</h4>
+  <p align="center">
+    <a href="https://github.com/paraspell/xcm-sdk/actions">
+      <img alt="build" src="https://github.com/paraspell/xcm-api/actions/workflows/ci.yml/badge.svg" />
+    </a>
+  </p>
+  <p align="center"> Now live at https://api.lightspell.xyz/</p>
+  <p>XCM API documentation <a href = "https://paraspell.github.io/docs/api/g-started.html" \>[here]</p>
+</div>
 
-<p align="center">
-The 🥇 XCM-API in Polkadot & Kusama ecosystem.
-</p>
-
-<p align="center">
-Enhance the cross-chain experience of your Polkadot/Kusama decentralized application.
-</p>
-
-[1. Introduction](#introduction)<br />
-[2. Problem statement](#problem-statement)<br />
-[3. Usage guide](#usage-guide)<br />
-&nbsp;&nbsp;[3.1 XCM Messages](#xcm-messages)<br />
-&nbsp;&nbsp;[3.2 XCM Router](#xcm-router)<br />
-&nbsp;&nbsp;[3.3 Asset Pallet](#asset-pallet)<br />
-&nbsp;&nbsp;[3.4 XCM Pallet](#xcm-pallet)<br />
-&nbsp;&nbsp;[3.5 HRMP Pallet](#hrmp-pallet)<br />
-[4. Running the API locally](#running-the-api-locally)<br />
-&nbsp;&nbsp;[4.1 Installation](#installation)<br />
-&nbsp;&nbsp;[4.2 Start nest server](#start-nest-server)<br />
-[5. Upgrading request per minute count](#upgrading-request-per-minute-count)<br />
-[6. Deploying API yourself](#deploying-api-yourself)<br />
-[7. Tests](#tests)<br />
-&nbsp;&nbsp;[7.1 API playground](#api-playground-for-router-endpoint-testing-use-xcm-router-playground)<br />
-&nbsp;&nbsp;[7.2 API tests](#api-tests)<br />
-
-## Live status
-API is now deployed on the live server and accessible on the following link: https://api.lightspell.xyz/
+<br /><br />
+<br /><br />
 
 ## Introduction
-Our team has focused on the unification of cross-chain communication in the Polkadot and Kusama ecosystems for a while now. Our latest and flagship addition is XCM API also known as LightSpell⚡️. This tool allows you to implement cross-chain interoperability into your application within moments.
+  <img width="400" alt="LightSpell logo" src="https://user-images.githubusercontent.com/55763425/251588168-4855abc3-445a-4207-9a65-e891975be62c.png">
+
+XCM API allows you to implement all XCM SDK and XCM Router features. 
 
 **Reasons to use XCM API for interoperability integration into your application:**
 - XCM API handles complex logic and you are only required to provide basic details to create calls (Junctions and other complex details are auto-filled for you)
@@ -44,19 +28,9 @@ Our team has focused on the unification of cross-chain communication in the Polk
 - Package-less integration (No need to install anything)
 - Simple to implement (Constructed to be as dev-friendly as possible)
 
-## Problem statement
-The interoperability experience on Polkadot & Kusama is very diverse for developers. Currently, XCM has the following problems our XCM API &  XCM SDK tries to overcome them for you:
-- Different XCM versions implemented across Parachains (Some still have V1 others switched to the latest V3 already)
-- Multiple variations and differences of XCM Pallets across Parachains (eg. asset selection mechanism on xTokens, some Parachains use asset id (eg. Basilisk) to select assets others have multilayer asset selection (eg. Acala) this can be observed [in this picture](https://user-images.githubusercontent.com/55763425/253806931-3fa05b86-627c-46bc-a4ab-c5c2cd619b35.png).)
-- Ecosystem has 4 different XCM Pallets (PolkadotXCM, OrlmXTokens, xTokens, PalletXCM)
-- To novices in the ecosystem it can be hard to find which Parachains are HRMP-connected and XCM-compatible
-- Parachains have their own Asset registration systems and they have different assets (Can lead to asset loss if a novice sends an asset that is not registered on the destination chain)
-
-Our XCM API solves this by implementing XCM SDK which researched every compatible Parachain XCM Pallet and integrated support for them and their variations. XCM SDK is updated regularly to keep every integrated Parachain up to date. XCM SDK unifies XCM message construction to simple patterns. Our XCM API can utilize this and enhance it making XCM call construction a matter of seconds instead of hours or days. XCM API and XCM SDK also feature user error prevention (Inability to construct a message from Parachain on Polkadot to Parachain on Kusama, inability to construct a message if the asset is not registered on the destination or origin chain and many more). **XCM API can greatly reduce application development times, save server costs and boost the ecosystem with new fresh projects**.
-
-## Usage guide
-This guide briefly covers how to use XCM-API. For a full guide refer to [official documentation](https://paraspell.github.io/docs/api/g-started.html).
-
+**XCM API can greatly reduce application development times, save server costs and boost the ecosystem with new fresh projects**.
+  
+## Implementation
 ### XCM Messages
 A complete guide on this section can be found in [official docs](https://paraspell.github.io/docs/api/xcmP.html).
 
@@ -252,16 +226,23 @@ $ yarn start:dev
 $ yarn start:prod
 ```
 
-## Upgrading request per minute count
-For guidance on this topic head to the following [documentation section](https://paraspell.github.io/docs/api/upgrade.html).
+### Other
 
-## Deploying API yourself
-For guidance on this topic head to the following [documentation section](https://paraspell.github.io/docs/api/deploy.html).
+#### Upgrading request per minute count - [guide](https://paraspell.github.io/docs/api/upgrade.html).
+
+#### Deploying API yourself - [guide](https://paraspell.github.io/docs/api/deploy.html).
 
 ## Tests
-The following section contains various test types (unit, e2e, integration, coverage) and a test playground that allows you to fully test API capabilities.
 
-### API playground (For Router endpoint testing use [XCM Router Playground](https://github.com/paraspell/xcm-router/tree/main/playground))
+- Run linter using `yarn lint`
+
+- Run unit and integration tests using `yarn test`
+
+- Run end-to-end tests using `yarn test:e2e`
+
+- Run coverage test `yarn test:cov`
+
+#### API playground (For Router endpoint testing use [XCM Router Playground](https://github.com/paraspell/xcm-router/tree/main/playground))
 ```bash
 # Navigate to the playground folder
 $ cd playground
@@ -273,20 +254,11 @@ $ pnpm i
 $ pnpm run serve
 
 # IMPORTANT: Make sure XCM API is also running in another terminal!
-$ pnpm run start
+$ yarn start
 ```
 
-### API tests
-Following commands allow you to run various tests on the API.
+## License
 
-```bash
-# unit & integration tests
-$ yarn test
+Made with 💛 by [ParaSpell✨](https://github.com/paraspell)
 
-# e2e tests
-$ yarn test:e2e
-
-# test coverage
-$ yarn test:cov
-```
-
+Published under [MIT License](https://github.com/paraspell/xcm-api/blob/main/LICENSE).
